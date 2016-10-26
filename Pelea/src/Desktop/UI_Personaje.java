@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import org.apache.logging.log4j.Level;
+//import org.apache.logging.log4j.Level;
 
 import javax.swing.JCheckBox;
 import javax.swing.JButton;
@@ -15,23 +15,28 @@ import javax.swing.JButton;
 import entities.*;
 import logic.*;
 import util.ApplicationException;
-import util.SuperLogger;
+//import util.SuperLogger;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
+import java.awt.SystemColor;
 
 public class UI_Personaje {
 	
 	private PersonajeLogic ctrl;
+	Personaje perActual;
 
 	private JFrame frame;
-	private JTextField txtApellido;
-	private JTextField txtNombre;
-	private JTextField txtDni;
-	private JCheckBox chckbxHabilitado;
-	private JTextField txtId;
+	private JTextField textId;
+	private JTextField textNombre;
+	private JTextField textVida;
+	private JTextField textEnergia;
+	private JTextField textDefensa;
+	private JTextField textEvasion;
+	private JTextField textPtsrest;
 
 	/**
 	 * Launch the application.
@@ -66,95 +71,117 @@ public class UI_Personaje {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		JLabel lblDni = new JLabel("Dni:");
-		lblDni.setBounds(12, 68, 70, 15);
-		frame.getContentPane().add(lblDni);
-		
-		JLabel lblNombre = new JLabel("Nombre:");
-		lblNombre.setBounds(12, 114, 70, 15);
+		JLabel lblNombre = new JLabel("Nombre");
+		lblNombre.setBounds(22, 54, 70, 15);
 		frame.getContentPane().add(lblNombre);
 		
-		JLabel lblApellido = new JLabel("Apellido:");
-		lblApellido.setBounds(12, 169, 70, 15);
-		frame.getContentPane().add(lblApellido);
+		JLabel lblVida = new JLabel("Vida ");
+		lblVida.setBounds(22, 121, 32, 15);
+		frame.getContentPane().add(lblVida);
 		
-		txtApellido = new JTextField();
-		txtApellido.setBounds(82, 167, 114, 19);
-		frame.getContentPane().add(txtApellido);
-		txtApellido.setColumns(10);
+		JLabel lblEnergia = new JLabel("Energ\u00EDa");
+		lblEnergia.setBounds(22, 147, 43, 15);
+		frame.getContentPane().add(lblEnergia);
 		
-		txtNombre = new JTextField();
-		txtNombre.setBounds(82, 112, 114, 19);
-		frame.getContentPane().add(txtNombre);
-		txtNombre.setColumns(10);
-		
-		txtDni = new JTextField();
-		txtDni.setBounds(82, 66, 114, 19);
-		frame.getContentPane().add(txtDni);
-		txtDni.setColumns(10);
-		
-		chckbxHabilitado = new JCheckBox("Habilitado");
-		chckbxHabilitado.setBounds(8, 228, 129, 23);
-		frame.getContentPane().add(chckbxHabilitado);
-		
-		JButton btnAgregar = new JButton("Agregar");
-		btnAgregar.addMouseListener(new MouseAdapter() {
+		JButton btnResetear = new JButton("Resetear");
+		btnResetear.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				agregar();
 			}
 		});
-		btnAgregar.setBounds(244, 135, 117, 25);
-		frame.getContentPane().add(btnAgregar);
+		btnResetear.setBounds(262, 77, 117, 25);
+		frame.getContentPane().add(btnResetear);
 		
-		JButton btnModificar = new JButton("Modificar");
-		btnModificar.addActionListener(new ActionListener() {
+		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.setBackground(Color.LIGHT_GRAY);
+		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				modificar();
 			}
 		});
-		btnModificar.setBounds(244, 164, 117, 25);
-		frame.getContentPane().add(btnModificar);
+		btnCancelar.setBounds(262, 131, 117, 25);
+		frame.getContentPane().add(btnCancelar);
 		
-		JButton btnEliminar = new JButton("Eliminar");
-		btnEliminar.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				eliminar();
-			}
-		});
-		btnEliminar.setBounds(244, 197, 117, 25);
-		frame.getContentPane().add(btnEliminar);
-		
-		JButton btnBuscar = new JButton("Buscar");
-		btnBuscar.addMouseListener(new MouseAdapter() {
+		JButton btnGuardar = new JButton("Guardar");
+		btnGuardar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				buscar();
 			}
 		});
-		btnBuscar.setBounds(244, 63, 117, 25);
-		frame.getContentPane().add(btnBuscar);
+		btnGuardar.setBounds(262, 23, 117, 25);
+		frame.getContentPane().add(btnGuardar);
 		
-		JLabel lblId = new JLabel("Id:");
-		lblId.setBounds(12, 28, 70, 15);
+		JLabel lblId = new JLabel("ID");
+		lblId.setBounds(22, 28, 70, 15);
 		frame.getContentPane().add(lblId);
 		
-		txtId = new JTextField();
-		txtId.setEnabled(false);
-		txtId.setBounds(82, 26, 114, 19);
-		frame.getContentPane().add(txtId);
-		txtId.setColumns(10);
-	}
-	
-	protected void eliminar() {
-		ctrl.delete(MapearDeFormulario());
-		limpiarCampos();
+		textId = new JTextField();
+		textId.setEditable(false);
+		textId.setEnabled(false);
+		textId.setBounds(69, 25, 114, 19);
+		frame.getContentPane().add(textId);
+		textId.setColumns(10);
+		
+		textNombre = new JTextField();
+		textNombre.setBackground(Color.WHITE);
+		textNombre.setEnabled(false);
+		textNombre.setColumns(10);
+		textNombre.setBounds(69, 51, 114, 19);
+		frame.getContentPane().add(textNombre);
+		
+		JLabel lblDefensa = new JLabel("Defensa");
+		lblDefensa.setBounds(22, 182, 43, 15);
+		frame.getContentPane().add(lblDefensa);
+		
+		JLabel lblEvasion = new JLabel("Evasi\u00F3n");
+		lblEvasion.setBounds(23, 211, 43, 15);
+		frame.getContentPane().add(lblEvasion);
+		
+		textVida = new JTextField();
+		textVida.setBackground(Color.WHITE);
+		textVida.setEnabled(false);
+		textVida.setColumns(10);
+		textVida.setBounds(69, 118, 114, 19);
+		frame.getContentPane().add(textVida);
+		
+		textEnergia = new JTextField();
+		textEnergia.setBackground(Color.WHITE);
+		textEnergia.setEnabled(false);
+		textEnergia.setColumns(10);
+		textEnergia.setBounds(69, 147, 114, 19);
+		frame.getContentPane().add(textEnergia);
+		
+		textDefensa = new JTextField();
+		textDefensa.setBackground(Color.WHITE);
+		textDefensa.setEnabled(false);
+		textDefensa.setColumns(10);
+		textDefensa.setBounds(69, 179, 114, 19);
+		frame.getContentPane().add(textDefensa);
+		
+		textEvasion = new JTextField();
+		textEvasion.setBackground(Color.WHITE);
+		textEvasion.setEnabled(false);
+		textEvasion.setColumns(10);
+		textEvasion.setBounds(69, 208, 114, 19);
+		frame.getContentPane().add(textEvasion);
+		
+		JLabel lblPtsrest = new JLabel("Ptos. restantes");
+		lblPtsrest.setBounds(10, 235, 82, 15);
+		frame.getContentPane().add(lblPtsrest);
+		
+		textPtsrest = new JTextField();
+		textPtsrest.setEnabled(false);
+		textPtsrest.setColumns(10);
+		textPtsrest.setBackground(SystemColor.controlHighlight);
+		textPtsrest.setBounds(89, 232, 43, 19);
+		frame.getContentPane().add(textPtsrest);
 	}
 
 	protected void modificar() {
 		try {
-			ctrl.update(MapearDeFormulario());
+			ctrl.guardar(MapearDeFormulario());
 			limpiarCampos();
 		} catch (ApplicationException appe) {
 			notifyUser(appe.getMessage(),appe, Level.DEBUG);
@@ -179,43 +206,48 @@ public class UI_Personaje {
 	}
 
 	private void limpiarCampos() {
-		txtId.setText("");
-		txtDni.setText("");
-		txtApellido.setText("");
-		txtNombre.setText("");
-		chckbxHabilitado.setSelected(false);
+		textId.setText("");
+		textNombre.setText("");
+		textVida.setText("0");
+		textEnergia.setText("0");
+		textDefensa.setText("0");
+		textEvasion.setText("0");
+		textPtsrest.setText("200");
 	}
 
 	protected void buscar() {
-		Personaje p = ctrl.getPersonaje(MapearDeFormulario());
+		Personaje p = ctrl.getByNombre(MapearDeFormulario());
 		if(p!=null){
 			MapearAFormulario(p);
 		}
 	}
 
 	public void MapearAFormulario(Personaje p){
-		if(p.getId()>0) txtId.setText(String.valueOf(p.getId()));
-		txtDni.setText(String.valueOf( p.getDni()));
-		txtNombre.setText(p.getNombre());
-		txtApellido.setText(p.getApellido());
-		chckbxHabilitado.setSelected(p.isHabilitado());
+		if(p.getId()>0) textId.setText(String.valueOf(p.getId()));
+		textNombre.setText(p.getNombre());
+		textVida.setText(String.valueOf(p.getVida()));
+		textEnergia.setText(String.valueOf(p.getEnergia()));
+		textDefensa.setText(String.valueOf(p.getDefensa()));
+		textEvasion.setText(String.valueOf(p.getEvasion()));
+		textPtsrest.setText(String.valueOf(p.getPtsTotales()));
 	}
 	
 	public Personaje MapearDeFormulario(){
 		Personaje p = new Personaje();
-		if(!txtId.getText().isEmpty()) p.setId(Integer.parseInt(txtId.getText()));
-		p.setDni(Integer.parseInt(txtDni.getText()));
-		p.setApellido(txtApellido.getText());
-		p.setNombre(txtNombre.getText());
-		p.setHabilitado(chckbxHabilitado.isSelected());
-		
+		if(!textId.getText().isEmpty()) p.setId(Integer.parseInt(textId.getText()));
+		p.setNombre(textNombre.getText());
+		p.setVida(Integer.parseInt(textVida.getText()));
+		p.setEnergia(Integer.parseInt(textEnergia.getText()));
+		p.setDefensa(Integer.parseInt(textDefensa.getText()));
+		p.setEvasion(Integer.parseInt(textEvasion.getText()));
+		p.setPtsTotales(Integer.parseInt(textPtsrest.getText()));
 		return p;
 	}
 	
 	public boolean datosValidos(){
 		boolean valido=true;
 		if(txtDni.getText().trim().length()==0
-			|| txtNombre.getText().trim().length()==0
+			|| textNombre.getText().trim().length()==0
 			|| txtApellido.getText().trim().length()==0){
 			valido=false;
 			notifyUser("Complete todos los campos");
