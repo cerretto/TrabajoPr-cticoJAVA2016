@@ -94,72 +94,74 @@ public class PersonajeAdapter {
 	{
 		switch(per.getEstData()) {
 		case New:
-			addPersonaje(per);
+			Insert(per);
 			break;
 		case Modified:
-			editPersonaje(per);
+			Edit(per);
 			break;
 		case Deleted:
-			deletePersonaje(per);
+			Delete(per);
 			break;
 		default:
 			break;
 		}
 	}
 
-	private void addPersonaje(Personaje pj) throws Exception, ErrorConexionException {
-		//_list.add(pj);
+	private void Insert(Personaje per) throws Exception//, ErrorConexionException {
+	{
+	
 		ResultSet rs=null;
 		PreparedStatement stmt=null;
 		
 		
 		try {
-			stmt=FactoryConexion.getInstancia().getConn().prepareStatement(
+			stmt=FactoryConection.getInstancia().getConn().prepareStatement(
 					"insert into personajes(nombre, puntos_disp,vida, energia, defensa, evasion)"+
 					" values(?,?,?,?,?,?)",PreparedStatement.RETURN_GENERATED_KEYS);
 			// PreparedStatement.RETURN_GENERATED_KEYS to be able to retrieve id generated on the db
 			// by the autoincrement column. Otherwise don't use it
 						
-			stmt.setString(1, pj.getNombre());
-			stmt.setInt(2, pj.getPtsTotales());
-			stmt.setInt(3, pj.getVida());
-			stmt.setInt(4, pj.getEnergia());
-			stmt.setInt(5, pj.getDefensa());
-			stmt.setInt(6, pj.getEvasion());
+			stmt.setString(1, per.getNombre());
+			stmt.setInt(2, per.getPtsTotales());
+			stmt.setInt(3, per.getVida());
+			stmt.setInt(4, per.getEnergia());
+			stmt.setInt(5, per.getDefensa());
+			stmt.setInt(6, per.getEvasion());
 			stmt.execute();
 			
 			//after executing the insert use the following lines to retrieve the id
 			rs=stmt.getGeneratedKeys();
 			if(rs!=null && rs.next()){
-				pj.setId(rs.getInt(1));
+				per.setId(rs.getInt(1));
 			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			throw new Exception("Error al crear personaje", e);
-		} catch (ErrorConexionException e) {
-			throw e;
+		/*} catch (ErrorConexionException e) {
+			throw e; */
 		}finally {
 			try {
 				if(rs!=null) rs.close();
 				if(stmt!=null)stmt.close();
-				FactoryConexion.getInstancia().releaseConn();
-			} catch (ErrorConexionException e) {
-				throw e;
+				FactoryConection.getInstancia().releaseConn();
+			/*} catch (ErrorConexionException e) {
+				throw e;*/
 			} catch (SQLException e) {
 				throw new Exception("Error al cerrar conexion",e);
 			}
 		}
 	}
 	
-	private void editPersonaje(Personaje pj) throws Exception, ErrorConexionException {
-		//
+	private void Edit(Personaje per) throws Exception//, ErrorConexionException {
+	{
+	
 		ResultSet rs=null;
 		PreparedStatement stmt=null;
 		
 		
 		try {
-			stmt=FactoryConexion.getInstancia().getConn().prepareStatement(
+			stmt=FactoryConection.getInstancia().getConn().prepareStatement(
 					"Update personajes Set "
 					+ "nombre = ?, "
 					+ "puntos_disp = ?, "
@@ -169,40 +171,41 @@ public class PersonajeAdapter {
 					+ "evasion = ? "
 					+ "Where id_personaje = ?");
 						
-			stmt.setString(1, pj.getNombre());
-			stmt.setInt(2, pj.getPtsTotales());
-			stmt.setInt(3, pj.getVida());
-			stmt.setInt(4, pj.getEnergia());
-			stmt.setInt(5, pj.getDefensa());
-			stmt.setInt(6, pj.getEvasion());
-			stmt.setInt(7, pj.getId());
+			stmt.setString(1, per.getNombre());
+			stmt.setInt(2, per.getPtsTotales());
+			stmt.setInt(3, per.getVida());
+			stmt.setInt(4, per.getEnergia());
+			stmt.setInt(5, per.getDefensa());
+			stmt.setInt(6, per.getEvasion());
+			stmt.setInt(7, per.getId());
 			stmt.execute();
 			
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			throw new Exception("Error al editar personaje", e);
-		} catch (ErrorConexionException e) {
-			throw e;
+		/*} catch (ErrorConexionException e) {
+			throw e;*/
 		}finally {
 			try {
 				if(rs!=null) rs.close();
 				if(stmt!=null)stmt.close();
-				FactoryConexion.getInstancia().releaseConn();
-			} catch (ErrorConexionException e) {
-				throw e;
+				FactoryConection.getInstancia().releaseConn();
+			/*} catch (ErrorConexionException e) {
+				throw e; */
 			} catch (SQLException e) {
 				throw new Exception("Error al cerrar conexion",e);
 			}
 		}
 	}
 	
-	private void deletePersonaje(Personaje pj) throws Exception, ErrorConexionException {
+	private void Delete(Personaje pj) throws Exception//, ErrorConexionException {
+	{
 		ResultSet rs=null;
 		PreparedStatement stmt=null;
 		
 		try {
-			stmt=FactoryConexion.getInstancia().getConn().prepareStatement(
+			stmt=FactoryConection.getInstancia().getConn().prepareStatement(
 					"Delete From personajes "
 					+ "Where id_personaje = ?");
 						
@@ -212,15 +215,15 @@ public class PersonajeAdapter {
 			
 		} catch (SQLException e) {
 			throw new Exception("Error al eliminar personaje", e);
-		} catch (ErrorConexionException e) {
-			throw e;
+		/*} catch (ErrorConexionException e) {
+			throw e;*/
 		}finally {
 			try {
 				if(rs!=null) rs.close();
 				if(stmt!=null)stmt.close();
-				FactoryConexion.getInstancia().releaseConn();
-			} catch (ErrorConexionException e) {
-				throw e;
+				FactoryConection.getInstancia().releaseConn();
+			/*} catch (ErrorConexionException e) {
+				throw e; */
 			} catch (SQLException e) {
 				throw new Exception("Error al cerrar conexion",e);
 			}
