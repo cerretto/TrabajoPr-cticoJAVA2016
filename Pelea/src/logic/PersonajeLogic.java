@@ -7,10 +7,11 @@ import entities.*;
 import data.*;
 
 public class PersonajeLogic {
-	private PersonajeAdapter _db;
+	
+	private PersonajeAdapter PersonajeData;
 	
 	public PersonajeLogic() {
-		_db = new PersonajeAdapter();
+		PersonajeData = new PersonajeAdapter();
 	}
 	
 	public void guardar(Personaje p) throws Exception
@@ -40,7 +41,7 @@ public class PersonajeLogic {
 			}
 			try
 			{
-				_db.Guardar(p);
+				PersonajeData.Guardar(p);
 			}
 			//catch (ErrorConexionException e)
 			//{
@@ -51,8 +52,11 @@ public class PersonajeLogic {
 				throw e;
 			}
 			
-		} catch (PersonajeInvalidoException piEx) {
+		/*} catch (PersonajeInvalidoException piEx) {
 			throw piEx;
+		}*/
+		} catch (Exception ex) {
+			throw ex;
 		}
 	}
 
@@ -60,7 +64,7 @@ public class PersonajeLogic {
 	{
 		try
 		{
-			return _db.GetAll();
+			return PersonajeData.GetAll();
 		}
 		catch (Exception e)
 		{
@@ -68,7 +72,7 @@ public class PersonajeLogic {
 		}
 	}
 	
-	public Personaje GetByNombre(Personaje pj) throws Exception {
-		return _db.GetByNombre(pj);
+	public Personaje getByNombre(Personaje pj) throws Exception {
+		return PersonajeData.getByNombre(pj);
 	}
 }

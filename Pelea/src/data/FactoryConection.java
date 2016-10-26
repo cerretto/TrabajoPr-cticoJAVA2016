@@ -7,8 +7,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import util.DriverNoEncontradoException;
-import util.ErrorConexionException;
+//import util.DriverNoEncontradoException;
+//import util.ErrorConexionException;
 
 public class FactoryConection {
 	private String dbDriver="com.mysql.jdbc.Driver";
@@ -23,7 +23,7 @@ public class FactoryConection {
 	private Connection conn;
 	private int cantConn=0;
 	
-	private FactoryConection() throws DriverNoEncontradoException{
+	private FactoryConection(){ //throws DriverNoEncontradoException{
 		try {
 			Class.forName(dbDriver);
 			
@@ -37,23 +37,24 @@ public class FactoryConection {
 		    user = propiedades.getProperty("user");
 		    pass = propiedades.getProperty("pass");
 			
-		} catch (ClassNotFoundException e) {
+		//} catch (ClassNotFoundException e) {
 			//throw new DriverNoEncontradoException("Error del Driver JDBC", e);
 		} catch (Exception ex) {
+			
 			//throw new DriverNoEncontradoException("Error en rchivo de configuracion.", ex);
 		}
 	}
 	
 	private static FactoryConection instancia;
 	
-	public static FactoryConection getInstancia() throws DriverNoEncontradoException{
+	public static FactoryConection getInstancia(){ //throws DriverNoEncontradoException{
 		if (instancia==null){
 			instancia = new FactoryConection();
 		}
 		return instancia;
 	}
 	
-	public Connection getConn() throws ErrorConexionException{
+	public Connection getConn(){ //throws ErrorConexionException{
 		try {
 			if(conn==null || conn.isClosed()){
 				conn = DriverManager.getConnection(
@@ -62,20 +63,20 @@ public class FactoryConection {
 				cantConn++;
 			}
 		} catch (SQLException e) {
-			throw new ErrorConexionException("Error al conectar a la DB", e);
+			//throw new ErrorConexionException("Error al conectar a la DB", e);
 
 		}
 		return conn;
 	}
 	
-	public void releaseConn() throws ErrorConexionException{
+	public void releaseConn(){ //throws ErrorConexionException{
 		try {
 			cantConn--;
 			if(cantConn==0){
 				conn.close();
 			}
 		} catch (SQLException e) {
-			throw new ErrorConexionException("Error al cerrar conexi�n", e);
+			//throw new ErrorConexionException("Error al cerrar conexi�n", e);
 		}
 		
 	}
