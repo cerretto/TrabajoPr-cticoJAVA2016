@@ -246,15 +246,17 @@ public class UI_Personaje {
 	
 	public boolean datosValidos(){
 		boolean valido=true;
-		if(txtDni.getText().trim().length()==0
-			|| textNombre.getText().trim().length()==0
-			|| txtApellido.getText().trim().length()==0){
+		if(textNombre.getText().trim().length()==0
+			|| textVida.getText().trim().length()==0
+			|| textEvasion.getText().trim().length()==0
+			|| textDefensa.getText().trim().length()==0
+			|| textEnergia.getText().trim().length()==0){
 			valido=false;
 			notifyUser("Complete todos los campos");
 		}
-		if(valido && !txtDni.getText().matches("[0-9]*")){
+		if(valido && !textId.getText().matches("[0-9]*")){
 			valido=false;
-			notifyUser("DNI inválido");
+			notifyUser("Id inválido");
 		}
 			
 		return valido;
