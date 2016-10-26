@@ -14,7 +14,7 @@ import javax.swing.JButton;
 
 import entities.*;
 import logic.*;
-import util.ApplicationException;
+//import util.ApplicationException;
 //import util.SuperLogger;
 
 import java.awt.event.MouseAdapter;
@@ -23,6 +23,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.SystemColor;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class UI_Personaje {
 	
@@ -61,6 +63,11 @@ public class UI_Personaje {
 		initialize();
 		ctrl= new PersonajeLogic();
 	}
+	
+	public UI_Personaje(Personaje per){
+		this();
+		MapearAFormulario(per);
+	}
 
 	/**
 	 * Initialize the contents of the frame.
@@ -87,7 +94,7 @@ public class UI_Personaje {
 		btnResetear.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				agregar();
+				limpiarCampos();
 			}
 		});
 		btnResetear.setBounds(262, 77, 117, 25);
@@ -97,7 +104,7 @@ public class UI_Personaje {
 		btnCancelar.setBackground(Color.LIGHT_GRAY);
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				modificar();
+				terminate();
 			}
 		});
 		btnCancelar.setBounds(262, 131, 117, 25);
@@ -107,7 +114,7 @@ public class UI_Personaje {
 		btnGuardar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				buscar();
+				guardar();
 			}
 		});
 		btnGuardar.setBounds(262, 23, 117, 25);
@@ -140,6 +147,12 @@ public class UI_Personaje {
 		frame.getContentPane().add(lblEvasion);
 		
 		textVida = new JTextField();
+		textVida.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				calcularPtsRestantes();
+			}
+		});
 		textVida.setBackground(Color.WHITE);
 		textVida.setEnabled(false);
 		textVida.setColumns(10);
@@ -147,6 +160,12 @@ public class UI_Personaje {
 		frame.getContentPane().add(textVida);
 		
 		textEnergia = new JTextField();
+		textEnergia.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				calcularPtsRestantes();
+			}
+		});
 		textEnergia.setBackground(Color.WHITE);
 		textEnergia.setEnabled(false);
 		textEnergia.setColumns(10);
@@ -154,6 +173,12 @@ public class UI_Personaje {
 		frame.getContentPane().add(textEnergia);
 		
 		textDefensa = new JTextField();
+		textDefensa.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				calcularPtsRestantes();
+			}
+		});
 		textDefensa.setBackground(Color.WHITE);
 		textDefensa.setEnabled(false);
 		textDefensa.setColumns(10);
@@ -161,6 +186,12 @@ public class UI_Personaje {
 		frame.getContentPane().add(textDefensa);
 		
 		textEvasion = new JTextField();
+		textEvasion.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				calcularPtsRestantes();
+			}
+		});
 		textEvasion.setBackground(Color.WHITE);
 		textEvasion.setEnabled(false);
 		textEvasion.setColumns(10);
@@ -177,33 +208,16 @@ public class UI_Personaje {
 		textPtsrest.setBackground(SystemColor.controlHighlight);
 		textPtsrest.setBounds(89, 232, 43, 19);
 		frame.getContentPane().add(textPtsrest);
+		
+		JLabel lblMaxd = new JLabel("(m\u00E1x. 20) ");
+		lblMaxd.setBounds(191, 182, 50, 15);
+		frame.getContentPane().add(lblMaxd);
+		
+		JLabel lblMaxe = new JLabel("(m\u00E1x. 80) ");
+		lblMaxe.setBounds(191, 211, 50, 15);
+		frame.getContentPane().add(lblMaxe);
 	}
 
-	protected void modificar() {
-		try {
-			ctrl.guardar(MapearDeFormulario());
-			limpiarCampos();
-		} catch (ApplicationException appe) {
-			notifyUser(appe.getMessage(),appe, Level.DEBUG);
-		} catch (ArithmeticException are){
-			notifyUser("Ha ocurrido algo inesperado, consulte al administrador de sistemas.", are, Level.ERROR);
-		} catch (Exception e){
-			notifyUser("Ha ocurrido algo totalmente inesperado, consulte al administrador de sistemas.",e, Level.FATAL);
-		} utils
-	}
-
-	protected void agregar() {
-		if(datosValidos()){
-			try {
-				Personaje p=MapearDeFormulario();
-				ctrl.add(p);
-				MapearAFormulario(p);
-				//limpiarCampos();
-			} catch (ApplicationException ae) {
-				notifyUser(ae.getMessage(),ae, Level.DEBUG);
-			}
-		}
-	}
 
 	private void limpiarCampos() {
 		textId.setText("");
@@ -214,12 +228,51 @@ public class UI_Personaje {
 		textEvasion.setText("0");
 		textPtsrest.setText("200");
 	}
-
-	protected void buscar() {
-		Personaje p = ctrl.getByNombre(MapearDeFormulario());
-		if(p!=null){
-			MapearAFormulario(p);
+	
+	public void guardar(){
+		if(datosValidos()){
+			try{
+				ctrl.guardar(this.MapearDeFormulario());
+				this.terminate();
+			} catch(Exception ex){
+				notifyUser(ex.getMessage());
+			}
 		}
+		
+	}
+	
+	public void calcularPtsRestantes(){
+		int ptsRestantes = perActual.getPtsTotales();
+		if(!textVida.getText().equals("")){
+			try{
+				ptsRestantes -= Integer.parseInt(textVida.getText());
+			} catch (Exception ex){
+				notifyUser(ex.getMessage());
+			}
+		}
+		if(!textDefensa.getText().equals("")){
+			try{
+				ptsRestantes -= Integer.parseInt(textDefensa.getText());
+			} catch (Exception ex){
+				notifyUser(ex.getMessage());
+			}
+		}
+		if(!textEvasion.getText().equals("")){
+			try{
+				ptsRestantes -= Integer.parseInt(textEvasion.getText());
+			} catch (Exception ex){
+				notifyUser(ex.getMessage());
+			}
+		}
+		if(!textEnergia.getText().equals("")){
+			try{
+				ptsRestantes -= Integer.parseInt(textEnergia.getText());
+			} catch (Exception ex){
+				notifyUser(ex.getMessage());
+			}
+		}
+		
+		textPtsrest.setText(String.valueOf(ptsRestantes));
 	}
 
 	public void MapearAFormulario(Personaje p){
@@ -246,28 +299,51 @@ public class UI_Personaje {
 	
 	public boolean datosValidos(){
 		boolean valido=true;
+		String errores ="";
+		
 		if(textNombre.getText().trim().length()==0
 			|| textVida.getText().trim().length()==0
 			|| textEvasion.getText().trim().length()==0
 			|| textDefensa.getText().trim().length()==0
 			|| textEnergia.getText().trim().length()==0){
 			valido=false;
-			notifyUser("Complete todos los campos");
+			errores += "Complete todos los campos\n";
 		}
-		if(valido && !textId.getText().matches("[0-9]*")){
+		if( !textId.getText().matches("[0-9]*")
+					|| !textVida.getText().matches("[0-9]*")
+					|| !textDefensa.getText().matches("[0-9]*")
+					|| !textEnergia.getText().matches("[0-9]*")
+					|| !textEvasion.getText().matches("[0-9]*")){
 			valido=false;
-			notifyUser("Id inválido");
+			errores += "Datos incorrectos en campos numericos\n";
 		}
-			
+		if(Integer.parseInt(textDefensa.getText()) > 20
+				  || Integer.parseInt(textEvasion.getText()) > 80){
+			valido=false;
+			errores += "Ha superado los puntos permitidos de Evasion(80) y/o Defensa(20)\n";
+		}
+		if( Integer.parseInt(textVida.getText()) +
+				Integer.parseInt(textEnergia.getText()) +
+				Integer.parseInt(textDefensa.getText()) +
+				Integer.parseInt(textEvasion.getText()) > perActual.getPtsTotales()){
+			valido = false;
+			errores += "Los atributos del personaje superan los puntos disponibles\n";
+		}		
+		if(!valido) notifyUser(errores);
+				
 		return valido;
 	}
 	
-	private void notifyUser(String mensaje) {
+	public void notifyUser(String mensaje) {
 		JOptionPane.showMessageDialog(this.frame, mensaje);
 	}
+	
+	public void terminate(){
+		this.frame.dispose();
+	}
 
-	private void notifyUser(String mensaje, Exception e, Level l) {
+	/*private void notifyUser(String mensaje, Exception e, Level l) {
 		notifyUser(mensaje);
 		SuperLogger.logger.log(l, mensaje, e);
-	}
+	}*/
 }

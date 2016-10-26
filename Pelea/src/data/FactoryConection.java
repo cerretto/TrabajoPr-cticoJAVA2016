@@ -12,7 +12,7 @@ import java.util.Properties;
 
 public class FactoryConection {
 	private String dbDriver="com.mysql.jdbc.Driver";
-	private String host;
+	private String host="localhost";
 	private String port="3306";
 	private String user;
 	private String pass;
