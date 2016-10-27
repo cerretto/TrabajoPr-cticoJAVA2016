@@ -12,6 +12,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+
+import entities.Entidad;
 import entities.Personaje;
 import logic.PersonajeLogic;
 import java.util.ArrayList;
@@ -76,12 +78,14 @@ public class UI_ABM extends JFrame {
 		JButton btnAgregarPersonaje = new JButton("Agregar Personaje");
 		btnAgregarPersonaje.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				agregarPersonaje();
 			}
 		});
 		
 		JButton btnEditarPersonaje = new JButton("Editar Personaje");
 		btnEditarPersonaje.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				editarPersonaje();
 			}
 		});
 		btnEditarPersonaje.setVerticalAlignment(SwingConstants.TOP);
@@ -89,12 +93,14 @@ public class UI_ABM extends JFrame {
 		JButton btnElimarPersonaje = new JButton("Eliminar Personaje");
 		btnElimarPersonaje.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				eliminarPersonaje();
 			}
 		});
 		
 		JButton btnLimpiar = new JButton("Limpiar");
 		btnLimpiar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				refreshLista();
 			}
 		});
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
@@ -231,13 +237,61 @@ public class UI_ABM extends JFrame {
 		return mapFromArray(arre);
 	}
 	
-	private Personaje mapFromArray(Object[] perArray)
-	{
+	private Personaje mapFromArray(Object[] perArray){
 		Personaje p = new Personaje();
 		p.setId((int)perArray[0]);
 		p.setNombre((String)perArray[1]);
 		
 		return p;
+	}
+	
+	private void agregarPersonaje(){
+		new UI_Personaje();
+		
+		refreshLista();
+	}
+	
+	private void editarPersonaje(){
+		
+		if (table.getSelectedRow() == -1){
+			notifyUser("Elija un personaje");
+			return;
+		}
+				
+		Personaje per = getFromTabla();
+		per.setEstData(Entidad.estadoData.Modified);
+		
+		new UI_Personaje(per);
+		
+		refreshLista();
+	}
+	
+	private void eliminarPersonaje(){
+		
+		if (table.getSelectedRow() == -1){
+			notifyUser("Elija un personaje");
+			return;
+		}
+		
+		
+		Personaje per = getFromTabla();
+		String msj = "Est� seguro que desea eliminar a " + per.getNombre() + "?";
+		
+		int response = JOptionPane.showConfirmDialog(this, msj, "Eliminar Personaje", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		
+		if (response == JOptionPane.YES_OPTION) {
+
+			try
+			{
+				per.setEstData(Entidad.estadoData.Deleted);
+				ctrl.guardar(per);
+			}
+			catch(Exception ex) {
+				notifyUser(ex.getMessage());
+			}
+		}
+		
+		refreshLista();
 	}
 	
 	public void notifyUser(String mensaje) {
