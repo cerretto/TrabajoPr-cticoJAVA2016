@@ -74,13 +74,29 @@ public class UI_ABM extends JFrame {
 		});
 		
 		JButton btnAgregarPersonaje = new JButton("Agregar Personaje");
+		btnAgregarPersonaje.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		
 		JButton btnEditarPersonaje = new JButton("Editar Personaje");
+		btnEditarPersonaje.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnEditarPersonaje.setVerticalAlignment(SwingConstants.TOP);
 		
 		JButton btnElimarPersonaje = new JButton("Eliminar Personaje");
+		btnElimarPersonaje.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		
 		JButton btnLimpiar = new JButton("Limpiar");
+		btnLimpiar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
