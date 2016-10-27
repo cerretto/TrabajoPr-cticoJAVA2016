@@ -38,7 +38,7 @@ public class UI_ABM extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -49,7 +49,7 @@ public class UI_ABM extends JFrame {
 				}
 			}
 		});
-	}
+	}*/
 
 	/**
 	 * Create the frame.
@@ -165,7 +165,7 @@ public class UI_ABM extends JFrame {
 		table.setRowSelectionAllowed(true);
 		try
 		{
-			Object[] arre;
+			
 			for (Personaje personaje : personajes) 
 			{
 				model.addRow(mapearAarray(personaje));
