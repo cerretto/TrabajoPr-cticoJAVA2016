@@ -11,9 +11,15 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import entities.Personaje;
+import logic.PersonajeLogic;
+import java.util.ArrayList;
+
 import javax.swing.JTextArea;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -24,6 +30,9 @@ public class UI_ABM extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 	private JTextField txtIngresePersonaje;
+	
+	private Personaje perActual;
+	private PersonajeLogic ctrl;
 
 	/**
 	 * Launch the application.
@@ -117,5 +126,100 @@ public class UI_ABM extends JFrame {
 		table.getColumnModel().getColumn(1).setPreferredWidth(104);
 		scrollPane.setViewportView(table);
 		contentPane.setLayout(gl_contentPane);
+		
+		iniciar();
 	}
+	
+	private void iniciar(){
+		ctrl = new PersonajeLogic();
+		perActual = null;
+		refreshLista();
+	}
+	
+	private void refreshLista(){
+		try{
+			setearTabla(new PersonajeLogic().GetAll());
+		}catch(Exception ex){
+			notifyUser(ex.getMessage());
+		}
+	}
+	
+	private void setearTabla(ArrayList<Personaje> personajes){
+		DefaultTableModel model = makeModel();
+		table.setColumnSelectionAllowed(false);
+		table.setCellSelectionEnabled(false);
+		table.setRowSelectionAllowed(true);
+		try
+		{
+			Object[] arre;
+			for (Personaje personaje : personajes) 
+			{
+				model.addRow(mapearAarray(personaje));
+			}
+
+			table.setModel(model);
+		}
+		catch (Exception ex)
+		{
+			notifyUser(ex.getMessage());
+		}
+	}
+	
+	private DefaultTableModel makeModel(){
+		DefaultTableModel model = (new DefaultTableModel() {
+			public boolean isCellEditable(int rowIndex, int columnIndex){
+				return false;
+			}
+			
+		});
+		model.addColumn("ID");
+		model.addColumn("Nombre Personaje");
+		return model;
+	}
+	
+	private Object[] mapearAarray(Personaje per)
+	{
+		Object [] perArray = new Object[7];
+		perArray[0] = per.getId();
+		perArray[1] = per.getNombre();
+		
+		return perArray;
+	}
+	
+	private Personaje getFromTabla()
+	{
+		//construyo arreglo de objetos de la longitud de la cantidad de columnas
+		Object[] arre = new Object[table.getModel().getColumnCount()];
+		//tomo la fila seleccionada
+		int index = table.getSelectedRow();
+		//mapeo a un arreglo
+		for (int i = 0; i < table.getModel().getColumnCount(); i++)
+		{
+			arre[i] = table.getModel().getValueAt(index, i);
+		}
+		//mapeo arreglo a Personaje
+		return mapFromArray(arre);
+	}
+	
+	private Personaje mapFromArray(Object[] perArray)
+	{
+		Personaje p = new Personaje();
+		p.setId((int)perArray[0]);
+		p.setNombre((String)perArray[1]);
+		
+		return p;
+	}
+	
+	public void notifyUser(String mensaje) {
+		JOptionPane.showMessageDialog(this, mensaje);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
