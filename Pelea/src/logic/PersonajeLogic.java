@@ -14,17 +14,17 @@ public class PersonajeLogic {
 		PersonajeData = new PersonajeAdapter();
 	}
 	
-	public void guardar(Personaje p) throws Exception
+	public void guardar(Personaje per) throws Exception
 	{
 		try {
 			String error = "";
 			
-			int def = p.getDefensa();
-			int ene = p.getEnergia();
-			int vid = p.getVida();
-			int eva = p.getEvasion();
+			int def = per.getDefensa();
+			int ene = per.getEnergia();
+			int vid = per.getVida();
+			int eva = per.getEvasion();
 			
-			int ptosDisp = p.getPtsTotales();
+			int ptosDisp = per.getPtsTotales();
 			
 			if (def + ene + vid + eva > ptosDisp) {
 				error += "Los atributos elegidos superan a los disponible \n";
@@ -37,24 +37,18 @@ public class PersonajeLogic {
 			}
 			
 			if (error.length() != 0) {
-				//throw new PersonajeInvalidoException(error);
+				throw new Exception();
 			}
 			try
 			{
-				PersonajeData.Guardar(p);
-			}
-			//catch (ErrorConexionException e)
-			//{
-			//	throw e;
-			//}
-			catch (Exception e)
-			{
-				throw e;
+				PersonajeData.Guardar(per);
 			}
 			
-		/*} catch (PersonajeInvalidoException piEx) {
-			throw piEx;
-		}*/
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+			
 		} catch (Exception ex) {
 			throw ex;
 		}
@@ -66,13 +60,18 @@ public class PersonajeLogic {
 		{
 			return PersonajeData.GetAll();
 		}
-		catch (Exception e)
+		catch (Exception ex)
 		{
-			throw e;
+			throw ex;
 		}
 	}
 	
-	public Personaje getByNombre(Personaje pj) throws Exception {
-		return PersonajeData.getByNombre(pj);
+	public Personaje getByNombre(Personaje per) throws Exception {
+		return PersonajeData.getByNombre(per, "");
 	}
+	
+	public Personaje getByNombre(String nombre) throws Exception {
+		return PersonajeData.getByNombre(null, nombre);
+	}
+	
 }

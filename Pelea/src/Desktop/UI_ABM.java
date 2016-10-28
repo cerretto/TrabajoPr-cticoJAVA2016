@@ -294,6 +294,18 @@ public class UI_ABM extends JFrame {
 		refreshLista();
 	}
 	
+	private void buscar(String nombre){
+		
+		try{
+			
+			perActual = new PersonajeLogic().getByNombre(nombre);
+		
+		}
+		catch(Exception ex){
+			notifyUser(ex.getMessage());
+		}
+	}
+	
 	public void notifyUser(String mensaje) {
 		JOptionPane.showMessageDialog(this, mensaje);
 	}

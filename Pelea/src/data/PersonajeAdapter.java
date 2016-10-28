@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import entities.Personaje;
-//import util.ErrorConexionException;
+
 
 public class PersonajeAdapter {
 	
@@ -37,17 +37,27 @@ public class PersonajeAdapter {
 				personajes.add(per);
 			}
 		}
-		catch(Exception e)
+		catch(SQLException ex)
 		{
-			throw e;
+			throw ex;
 		}
 		
 		return personajes;
 		
 	}
 
-	public Personaje getByNombre(Personaje pj) throws Exception
+	public Personaje getByNombre(Personaje pj, String nombre) throws Exception
 	{
+		String nom = "";
+		
+		if(pj == null && nombre != ""){
+			nom = nombre;
+		} else if (pj != null && nombre ==""){
+			nom = pj.getNombre();
+		} else{
+			throw new Exception();
+		}
+		
 		Personaje per = new Personaje();
 		ResultSet rs = null;
 		PreparedStatement stmt = null;
@@ -55,7 +65,7 @@ public class PersonajeAdapter {
 		{
 			stmt = FactoryConection.getInstancia().getConn().prepareStatement("SELECT * FROM personajes"
 					+ " where personajes.nombre = ?");
-			stmt.setString(1, pj.getNombre());
+			stmt.setString(1, nom);
 			rs = stmt.executeQuery();
 			
 			if (rs.next()) 
@@ -71,18 +81,19 @@ public class PersonajeAdapter {
 			}
 		
 		
-		} catch (Exception e) {
-			throw new Exception( e);
+		} catch (SQLException ex) {
+			throw ex;
 		}
-		finally {
-			try {
+		finally 
+		{
+			try 
+			{
 				if(rs!=null) rs.close();
 				if(stmt!=null)stmt.close();
 				FactoryConection.getInstancia().releaseConn();
-			/*} catch (ErrorConexionException e) {
-				throw e;*/
-			} catch (SQLException e) {
-				throw new Exception("Error al cerrar conexion",e);
+			
+			} catch (Exception ex) {
+				throw ex;
 			}
 		}
 		
@@ -90,7 +101,7 @@ public class PersonajeAdapter {
 		return per;
 	}
 	
-	public void Guardar(Personaje per) throws Exception//, ErrorConexionException
+	public void Guardar(Personaje per) throws Exception
 	{
 		switch(per.getEstData()) {
 		case New:
@@ -107,7 +118,7 @@ public class PersonajeAdapter {
 		}
 	}
 
-	private void Insert(Personaje per) throws Exception//, ErrorConexionException {
+	private void Insert(Personaje per) throws Exception
 	{
 	
 		ResultSet rs=null;
@@ -135,20 +146,18 @@ public class PersonajeAdapter {
 				per.setId(rs.getInt(1));
 			}
 			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			throw new Exception("Error al crear personaje", e);
-		/*} catch (ErrorConexionException e) {
-			throw e; */
+		} catch (SQLException ex) {
+			
+			throw ex;
+		
 		}finally {
 			try {
 				if(rs!=null) rs.close();
 				if(stmt!=null)stmt.close();
 				FactoryConection.getInstancia().releaseConn();
-			/*} catch (ErrorConexionException e) {
-				throw e;*/
-			} catch (SQLException e) {
-				throw new Exception("Error al cerrar conexion",e);
+			
+			} catch (Exception ex) {
+				throw ex;
 			}
 		}
 	}
@@ -181,25 +190,23 @@ public class PersonajeAdapter {
 			stmt.execute();
 			
 			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			throw new Exception("Error al editar personaje", e);
-		/*} catch (ErrorConexionException e) {
-			throw e;*/
+		} catch (SQLException ex) {
+			
+			throw ex;
+		
 		}finally {
 			try {
 				if(rs!=null) rs.close();
 				if(stmt!=null)stmt.close();
 				FactoryConection.getInstancia().releaseConn();
-			/*} catch (ErrorConexionException e) {
-				throw e; */
-			} catch (SQLException e) {
-				throw new Exception("Error al cerrar conexion",e);
+			
+			} catch (SQLException ex) {
+				throw ex;
 			}
 		}
 	}
 	
-	private void Delete(Personaje pj) throws Exception//, ErrorConexionException {
+	private void Delete(Personaje pj) throws Exception
 	{
 		ResultSet rs=null;
 		PreparedStatement stmt=null;
@@ -213,10 +220,9 @@ public class PersonajeAdapter {
 			stmt.execute();
 			
 			
-		} catch (SQLException e) {
-			throw new Exception("Error al eliminar personaje", e);
-		/*} catch (ErrorConexionException e) {
-			throw e;*/
+		} catch (SQLException ex) {
+			throw ex;
+		
 		}finally {
 			try {
 				if(rs!=null) rs.close();
@@ -224,8 +230,8 @@ public class PersonajeAdapter {
 				FactoryConection.getInstancia().releaseConn();
 			/*} catch (ErrorConexionException e) {
 				throw e; */
-			} catch (SQLException e) {
-				throw new Exception("Error al cerrar conexion",e);
+			} catch (SQLException ex) {
+				throw ex;
 			}
 		}
 		
