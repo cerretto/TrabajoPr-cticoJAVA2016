@@ -6,6 +6,7 @@ import java.util.Random;
 public class Personaje extends Entidad {
 	private String nombre;
 	private int ptsTotales;
+	private int ptsRestantes;
 	private int vida;
 	private int energia;
 	private int defensa;
@@ -84,5 +85,13 @@ public class Personaje extends Entidad {
 	
 	public boolean equals(Personaje pj) {
 		return this.getNombre().equals(pj.getNombre());
+	}
+
+	public int getPtsRestantes() {
+		return ptsRestantes;
+	}
+
+	public void setPtsRestantes(int ptsRestantes) {
+		this.ptsRestantes = ptsRestantes;
 	}
 }

@@ -12,9 +12,9 @@ public class FactoryConection {
 	private String dbDriver="com.mysql.jdbc.Driver";
 	private String host="localhost";
 	private String port="3306";
-	private String user;
-	private String pass;
-	private String db="pelea";
+	private String user ="root";
+	private String pass="algy";
+	private String db="lucha";
 	private String dbType="mysql";
 	
 	
@@ -24,7 +24,7 @@ public class FactoryConection {
 	private FactoryConection()throws Exception { 
 		try {
 			Class.forName(dbDriver);
-			
+			/*
 			Properties propiedades = new Properties();
 		    InputStream entrada = null;
 		    
@@ -33,12 +33,13 @@ public class FactoryConection {
 			
 		    host = propiedades.getProperty("host");
 		    user = propiedades.getProperty("user");
-		    pass = propiedades.getProperty("pass");
+		    pass = propiedades.getProperty("pass"); 
+		    */
 			
 	
 		} catch (Exception ex) {
-			
 			throw ex;
+			//throw new Exception("error en el driver", ex);
 		}
 	}
 	

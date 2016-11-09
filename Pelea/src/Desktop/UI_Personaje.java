@@ -25,6 +25,8 @@ import java.awt.Color;
 import java.awt.SystemColor;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.UIManager;
+import java.awt.Font;
 
 public class UI_Personaje {
 	
@@ -32,13 +34,13 @@ public class UI_Personaje {
 	Personaje perActual;
 
 	private JFrame frame;
-	private JTextField textId;
-	private JTextField textNombre;
-	private JTextField textVida;
-	private JTextField textEnergia;
-	private JTextField textDefensa;
-	private JTextField textEvasion;
-	private JTextField textPtsrest;
+	private JTextField txtId;
+	private JTextField txtNombre;
+	private JTextField txtVida;
+	private JTextField txtEnergia;
+	private JTextField txtDefensa;
+	private JTextField txtEvasion;
+	private JTextField txtPtsrest;
 
 	/**
 	 * Launch the application.
@@ -62,6 +64,8 @@ public class UI_Personaje {
 	public UI_Personaje() {
 		initialize();
 		ctrl= new PersonajeLogic();
+		perActual = new Personaje();
+		limpiarCampos();
 	}
 	
 	public UI_Personaje(Personaje per){
@@ -74,7 +78,7 @@ public class UI_Personaje {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 500, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -83,11 +87,11 @@ public class UI_Personaje {
 		frame.getContentPane().add(lblNombre);
 		
 		JLabel lblVida = new JLabel("Vida ");
-		lblVida.setBounds(22, 121, 32, 15);
+		lblVida.setBounds(22, 121, 70, 15);
 		frame.getContentPane().add(lblVida);
 		
 		JLabel lblEnergia = new JLabel("Energ\u00EDa");
-		lblEnergia.setBounds(22, 147, 43, 15);
+		lblEnergia.setBounds(22, 147, 70, 15);
 		frame.getContentPane().add(lblEnergia);
 		
 		JButton btnResetear = new JButton("Resetear");
@@ -97,17 +101,17 @@ public class UI_Personaje {
 				limpiarCampos();
 			}
 		});
-		btnResetear.setBounds(262, 77, 117, 25);
+		btnResetear.setBounds(210, 230, 117, 25);
 		frame.getContentPane().add(btnResetear);
 		
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.setBackground(Color.LIGHT_GRAY);
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				terminate();
+				cancelar();
 			}
 		});
-		btnCancelar.setBounds(262, 131, 117, 25);
+		btnCancelar.setBounds(369, 230, 117, 25);
 		frame.getContentPane().add(btnCancelar);
 		
 		JButton btnGuardar = new JButton("Guardar");
@@ -117,123 +121,172 @@ public class UI_Personaje {
 				guardar();
 			}
 		});
-		btnGuardar.setBounds(262, 23, 117, 25);
+		btnGuardar.setBounds(369, 147, 117, 25);
 		frame.getContentPane().add(btnGuardar);
 		
 		JLabel lblId = new JLabel("ID");
 		lblId.setBounds(22, 28, 70, 15);
 		frame.getContentPane().add(lblId);
 		
-		textId = new JTextField();
-		textId.setEditable(false);
-		textId.setEnabled(false);
-		textId.setBounds(69, 25, 114, 19);
-		frame.getContentPane().add(textId);
-		textId.setColumns(10);
+		txtId = new JTextField();
+		txtId.setBackground(UIManager.getColor("TextField.inactiveBackground"));
+		txtId.setFont(new Font("Dialog", Font.BOLD, 12));
+		txtId.setForeground(UIManager.getColor("TextField.inactiveBackground"));
+		txtId.setEnabled(false);
+		txtId.setBounds(89, 26, 114, 19);
+		frame.getContentPane().add(txtId);
+		txtId.setColumns(10);
 		
-		textNombre = new JTextField();
-		textNombre.setBackground(Color.WHITE);
-		textNombre.setEnabled(false);
-		textNombre.setColumns(10);
-		textNombre.setBounds(69, 51, 114, 19);
-		frame.getContentPane().add(textNombre);
+		txtNombre = new JTextField();
+		txtNombre.setBackground(Color.WHITE);
+		txtNombre.setColumns(10);
+		txtNombre.setBounds(89, 52, 114, 19);
+		frame.getContentPane().add(txtNombre);
 		
 		JLabel lblDefensa = new JLabel("Defensa");
-		lblDefensa.setBounds(22, 182, 43, 15);
+		lblDefensa.setBounds(22, 174, 70, 15);
 		frame.getContentPane().add(lblDefensa);
 		
 		JLabel lblEvasion = new JLabel("Evasi\u00F3n");
-		lblEvasion.setBounds(23, 211, 43, 15);
+		lblEvasion.setBounds(22, 198, 69, 15);
 		frame.getContentPane().add(lblEvasion);
 		
-		textVida = new JTextField();
-		textVida.addKeyListener(new KeyAdapter() {
+		txtVida = new JTextField();
+		txtVida.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
 				calcularPtsRestantes();
 			}
 		});
-		textVida.setBackground(Color.WHITE);
-		textVida.setEnabled(false);
-		textVida.setColumns(10);
-		textVida.setBounds(69, 118, 114, 19);
-		frame.getContentPane().add(textVida);
+		txtVida.setBackground(Color.WHITE);
+		txtVida.setColumns(10);
+		txtVida.setBounds(89, 119, 114, 19);
+		frame.getContentPane().add(txtVida);
 		
-		textEnergia = new JTextField();
-		textEnergia.addKeyListener(new KeyAdapter() {
+		txtEnergia = new JTextField();
+		txtEnergia.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				calcularPtsRestantes();
 			}
 		});
-		textEnergia.setBackground(Color.WHITE);
-		textEnergia.setEnabled(false);
-		textEnergia.setColumns(10);
-		textEnergia.setBounds(69, 147, 114, 19);
-		frame.getContentPane().add(textEnergia);
+		txtEnergia.setBackground(Color.WHITE);
+		txtEnergia.setColumns(10);
+		txtEnergia.setBounds(89, 145, 114, 19);
+		frame.getContentPane().add(txtEnergia);
 		
-		textDefensa = new JTextField();
-		textDefensa.addKeyListener(new KeyAdapter() {
+		txtDefensa = new JTextField();
+		txtDefensa.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				calcularPtsRestantes();
 			}
 		});
-		textDefensa.setBackground(Color.WHITE);
-		textDefensa.setEnabled(false);
-		textDefensa.setColumns(10);
-		textDefensa.setBounds(69, 179, 114, 19);
-		frame.getContentPane().add(textDefensa);
+		txtDefensa.setBackground(Color.WHITE);
+		txtDefensa.setColumns(10);
+		txtDefensa.setBounds(89, 176, 114, 19);
+		frame.getContentPane().add(txtDefensa);
 		
-		textEvasion = new JTextField();
-		textEvasion.addKeyListener(new KeyAdapter() {
+		txtEvasion = new JTextField();
+		txtEvasion.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				calcularPtsRestantes();
 			}
 		});
-		textEvasion.setBackground(Color.WHITE);
-		textEvasion.setEnabled(false);
-		textEvasion.setColumns(10);
-		textEvasion.setBounds(69, 208, 114, 19);
-		frame.getContentPane().add(textEvasion);
+		txtEvasion.setBackground(Color.WHITE);
+		txtEvasion.setColumns(10);
+		txtEvasion.setBounds(89, 199, 114, 19);
+		frame.getContentPane().add(txtEvasion);
 		
 		JLabel lblPtsrest = new JLabel("Ptos. restantes");
-		lblPtsrest.setBounds(10, 235, 82, 15);
+		lblPtsrest.setBounds(10, 235, 117, 15);
 		frame.getContentPane().add(lblPtsrest);
 		
-		textPtsrest = new JTextField();
-		textPtsrest.setEnabled(false);
-		textPtsrest.setColumns(10);
-		textPtsrest.setBackground(SystemColor.controlHighlight);
-		textPtsrest.setBounds(89, 232, 43, 19);
-		frame.getContentPane().add(textPtsrest);
+		txtPtsrest = new JTextField();
+		txtPtsrest.setEnabled(false);
+		txtPtsrest.setForeground(Color.WHITE);
+		txtPtsrest.setFont(new Font("Dialog", Font.BOLD, 12));
+		txtPtsrest.setColumns(10);
+		txtPtsrest.setBackground(UIManager.getColor("TextField.background"));
+		txtPtsrest.setBounds(124, 233, 43, 19);
+		frame.getContentPane().add(txtPtsrest);
 		
 		JLabel lblMaxd = new JLabel("(m\u00E1x. 20) ");
-		lblMaxd.setBounds(191, 182, 50, 15);
+		lblMaxd.setBounds(210, 180, 70, 15);
 		frame.getContentPane().add(lblMaxd);
 		
 		JLabel lblMaxe = new JLabel("(m\u00E1x. 80) ");
-		lblMaxe.setBounds(191, 211, 50, 15);
+		lblMaxe.setBounds(210, 198, 70, 15);
 		frame.getContentPane().add(lblMaxe);
+		
+		JButton btnBuscar = new JButton("Buscar");
+		btnBuscar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				buscar();
+			}
+		});
+		btnBuscar.setBounds(215, 49, 117, 25);
+		frame.getContentPane().add(btnBuscar);
+		
+		JButton btnElegir = new JButton("Elegir");
+		btnElegir.setBounds(369, 49, 117, 25);
+		frame.getContentPane().add(btnElegir);
+		
+		JButton btnBorrar = new JButton("Borrar");
+		btnBorrar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				delete();
+			}
+		});
+		btnBorrar.setBounds(369, 184, 117, 25);
+		frame.getContentPane().add(btnBorrar);
 	}
 
 
 	private void limpiarCampos() {
-		textId.setText("");
-		textNombre.setText("");
-		textVida.setText("0");
-		textEnergia.setText("0");
-		textDefensa.setText("0");
-		textEvasion.setText("0");
-		textPtsrest.setText("200");
+		txtId.setText("");
+		txtNombre.setText("");
+		txtVida.setText("");
+		txtEnergia.setText("");
+		txtDefensa.setText("");
+		txtEvasion.setText("");
+		txtPtsrest.setText("200");
+	}
+	
+	public void buscar(){
+		if(this.txtNombre.getText().isEmpty()){
+			notifyUser("Debe ingresar un nombre por el cual buscar!");
+		} else{
+			try{
+				perActual = ctrl.getByNombre(txtNombre.getText());
+				if (perActual.getNombre() == null){
+					notifyUser("Personaje inexistente !");
+				} else{
+					this.MapearAFormulario(perActual);
+					notifyUser("Hola " + perActual.getNombre() + " !");
+				}
+				
+			} catch (Exception ex) {
+				notifyUser(ex.getMessage());
+			}
+		}
 	}
 	
 	public void guardar(){
 		if(datosValidos()){
 			try{
-				ctrl.guardar(this.MapearDeFormulario());
-				this.terminate();
+				perActual = this.MapearDeFormulario();
+				if(perActual.getId() > 0){
+					perActual.setEstData(Entidad.estadoData.Modified);
+				} else {
+					perActual.setEstData(Entidad.estadoData.New);
+				}
+				ctrl.guardar(perActual);
+				notifyUser("Guardado con exito.");
+				
 			} catch(Exception ex){
 				notifyUser(ex.getMessage());
 			}
@@ -241,91 +294,121 @@ public class UI_Personaje {
 		
 	}
 	
+	public void delete(){
+		try{
+			perActual = this.MapearDeFormulario();
+			if(perActual.getId() > 0 ){
+				perActual.setEstData(Entidad.estadoData.Deleted);
+				ctrl.guardar(perActual);
+				notifyUser("Personaje eliminado con exito.");
+			}else{
+				limpiarCampos();
+			}
+		}
+		catch(Exception ex){
+			notifyUser(ex.getMessage());
+		}
+	}
+	
+	public void cancelar(){
+		terminate();
+	}
+	
 	public void calcularPtsRestantes(){
 		int ptsRestantes = perActual.getPtsTotales();
-		if(!textVida.getText().equals("")){
+		if(!txtVida.getText().equals("")){
 			try{
-				ptsRestantes -= Integer.parseInt(textVida.getText());
+				ptsRestantes -= Integer.parseInt(txtVida.getText());
+				
 			} catch (Exception ex){
 				notifyUser(ex.getMessage());
 			}
 		}
-		if(!textDefensa.getText().equals("")){
+		if(!txtDefensa.getText().equals("")){
 			try{
-				ptsRestantes -= Integer.parseInt(textDefensa.getText());
+				ptsRestantes -= Integer.parseInt(txtDefensa.getText());
 			} catch (Exception ex){
 				notifyUser(ex.getMessage());
 			}
 		}
-		if(!textEvasion.getText().equals("")){
+		if(!txtEvasion.getText().equals("")){
 			try{
-				ptsRestantes -= Integer.parseInt(textEvasion.getText());
+				ptsRestantes -= Integer.parseInt(txtEvasion.getText());
 			} catch (Exception ex){
 				notifyUser(ex.getMessage());
 			}
 		}
-		if(!textEnergia.getText().equals("")){
+		if(!txtEnergia.getText().equals("")){
 			try{
-				ptsRestantes -= Integer.parseInt(textEnergia.getText());
+				ptsRestantes -= Integer.parseInt(txtEnergia.getText());
 			} catch (Exception ex){
 				notifyUser(ex.getMessage());
 			}
+		}
+		if (ptsRestantes < 0){
+			ptsRestantes = 0;
+			txtPtsrest.setText(String.valueOf(ptsRestantes));
+			notifyUser("Se ha excedido de su limite de puntos restantes");
+		}else{
+			txtPtsrest.setText(String.valueOf(ptsRestantes));
 		}
 		
-		textPtsrest.setText(String.valueOf(ptsRestantes));
 	}
 
 	public void MapearAFormulario(Personaje p){
-		if(p.getId()>0) textId.setText(String.valueOf(p.getId()));
-		textNombre.setText(p.getNombre());
-		textVida.setText(String.valueOf(p.getVida()));
-		textEnergia.setText(String.valueOf(p.getEnergia()));
-		textDefensa.setText(String.valueOf(p.getDefensa()));
-		textEvasion.setText(String.valueOf(p.getEvasion()));
-		textPtsrest.setText(String.valueOf(p.getPtsTotales()));
+		if(p.getId()>0) txtId.setText(String.valueOf(p.getId()));
+		txtNombre.setText(p.getNombre());
+		txtVida.setText(String.valueOf(p.getVida()));
+		txtEnergia.setText(String.valueOf(p.getEnergia()));
+		txtDefensa.setText(String.valueOf(p.getDefensa()));
+		txtEvasion.setText(String.valueOf(p.getEvasion()));
+		txtPtsrest.setText(String.valueOf(p.getPtsTotales()));
 	}
 	
 	public Personaje MapearDeFormulario(){
 		Personaje p = new Personaje();
-		if(!textId.getText().isEmpty()) p.setId(Integer.parseInt(textId.getText()));
-		p.setNombre(textNombre.getText());
-		p.setVida(Integer.parseInt(textVida.getText()));
-		p.setEnergia(Integer.parseInt(textEnergia.getText()));
-		p.setDefensa(Integer.parseInt(textDefensa.getText()));
-		p.setEvasion(Integer.parseInt(textEvasion.getText()));
-		p.setPtsTotales(Integer.parseInt(textPtsrest.getText()));
+		if(!txtId.getText().isEmpty()) p.setId(Integer.parseInt(txtId.getText()));
+		p.setNombre(txtNombre.getText());
+		p.setVida(Integer.parseInt(txtVida.getText()));
+		p.setEnergia(Integer.parseInt(txtEnergia.getText()));
+		p.setDefensa(Integer.parseInt(txtDefensa.getText()));
+		p.setEvasion(Integer.parseInt(txtEvasion.getText()));
+		p.setPtsTotales(Integer.parseInt(txtPtsrest.getText()));
 		return p;
 	}
 	
 	public boolean datosValidos(){
 		boolean valido=true;
 		String errores ="";
+		String nombre = this.txtNombre.getText().trim();
+		int vida = stringToInt(txtVida.getText().trim());
+		int evasion = stringToInt(txtEvasion.getText().trim());
+		int defensa = stringToInt(txtDefensa.getText().trim());
+		int energia = stringToInt(txtEnergia.getText().trim());
 		
-		if(textNombre.getText().trim().length()==0
-			|| textVida.getText().trim().length()==0
-			|| textEvasion.getText().trim().length()==0
-			|| textDefensa.getText().trim().length()==0
-			|| textEnergia.getText().trim().length()==0){
+		if(txtNombre.getText().trim().length()==0
+			|| txtVida.getText().trim().length()==0
+			|| txtEvasion.getText().trim().length()==0
+			|| txtDefensa.getText().trim().length()==0
+			|| txtEnergia.getText().trim().length()==0){
 			valido=false;
 			errores += "Complete todos los campos\n";
 		}
-		if( !textId.getText().matches("[0-9]*")
-					|| !textVida.getText().matches("[0-9]*")
-					|| !textDefensa.getText().matches("[0-9]*")
-					|| !textEnergia.getText().matches("[0-9]*")
-					|| !textEvasion.getText().matches("[0-9]*")){
+		if( !txtId.getText().matches("[0-9]*")
+					|| !txtVida.getText().matches("[0-9]*")
+					|| !txtDefensa.getText().matches("[0-9]*")
+					|| !txtEnergia.getText().matches("[0-9]*")
+					|| !txtEvasion.getText().matches("[0-9]*")){
 			valido=false;
 			errores += "Datos incorrectos en campos numericos\n";
 		}
-		if(Integer.parseInt(textDefensa.getText()) > 20
-				  || Integer.parseInt(textEvasion.getText()) > 80){
+		
+		
+		if(defensa > 20 || evasion > 80){
 			valido=false;
 			errores += "Ha superado los puntos permitidos de Evasion(80) y/o Defensa(20)\n";
 		}
-		if( Integer.parseInt(textVida.getText()) +
-				Integer.parseInt(textEnergia.getText()) +
-				Integer.parseInt(textDefensa.getText()) +
-				Integer.parseInt(textEvasion.getText()) > perActual.getPtsTotales()){
+		if( (vida + energia + defensa + evasion)  > perActual.getPtsTotales()){
 			valido = false;
 			errores += "Los atributos del personaje superan los puntos disponibles\n";
 		}		
@@ -338,12 +421,12 @@ public class UI_Personaje {
 		JOptionPane.showMessageDialog(this.frame, mensaje);
 	}
 	
+	private int stringToInt(String text){
+		int campo = text.isEmpty() ? 0 : Integer.parseInt(text);
+		return campo;
+	}
+	
 	public void terminate(){
 		this.frame.dispose();
 	}
-
-	/*private void notifyUser(String mensaje, Exception e, Level l) {
-		notifyUser(mensaje);
-		SuperLogger.logger.log(l, mensaje, e);
-	}*/
 }

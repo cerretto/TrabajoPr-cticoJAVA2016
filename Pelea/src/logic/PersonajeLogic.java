@@ -14,9 +14,9 @@ public class PersonajeLogic {
 		PersonajeData = new PersonajeAdapter();
 	}
 	
-	public void guardar(Personaje per) throws Exception
-	{
-		try {
+	public void guardar(Personaje per) throws Exception {
+	
+		if (per.getEstData() != Entidad.estadoData.Deleted){
 			String error = "";
 			
 			int def = per.getDefensa();
@@ -39,23 +39,25 @@ public class PersonajeLogic {
 			if (error.length() != 0) {
 				throw new Exception();
 			}
-			try
-			{
-				PersonajeData.Guardar(per);
-			}
-			
-			catch (Exception ex)
-			{
-				throw ex;
-			}
-			
-		} catch (Exception ex) {
+		
+		}
+		
+		try
+		{
+			PersonajeData.Guardar(per);
+		}
+		
+		catch (Exception ex)
+		{
 			throw ex;
 		}
+	
+		
 	}
 
-	public ArrayList<Personaje> GetAll() throws Exception
-	{
+	
+	
+	public ArrayList<Personaje> GetAll() throws Exception {
 		try
 		{
 			return PersonajeData.GetAll();
