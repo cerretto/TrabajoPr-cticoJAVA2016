@@ -36,8 +36,13 @@ public class PersonajeLogic {
 				error += "La defensa no puede superar los 20 puntos \n";
 			}
 			
+			
+			if(per.getNombre().equals(getByNombre(per).getNombre()) && per.getId() != getByNombre(per).getId()){
+				error += "Nombre de personaje ya existente \n";
+			}
+			
 			if (error.length() != 0) {
-				throw new Exception();
+				throw new Exception(error);
 			}
 		
 		}

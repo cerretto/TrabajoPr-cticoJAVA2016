@@ -64,7 +64,7 @@ public class PersonajeAdapter {
 		try 
 		{
 			stmt = FactoryConection.getInstancia().getConn().prepareStatement("SELECT * FROM personajes"
-					+ " where personajes.nombre = ?");
+					+ " where personajes.nombre = ? ");
 			stmt.setString(1, nom);
 			rs = stmt.executeQuery();
 			

@@ -301,6 +301,7 @@ public class UI_Personaje {
 				perActual.setEstData(Entidad.estadoData.Deleted);
 				ctrl.guardar(perActual);
 				notifyUser("Personaje eliminado con exito.");
+				limpiarCampos();
 			}else{
 				limpiarCampos();
 			}
@@ -316,6 +317,7 @@ public class UI_Personaje {
 	
 	public void calcularPtsRestantes(){
 		int ptsRestantes = perActual.getPtsTotales();
+		//int ptsRestantes = Integer.parseInt(txtPtsrest.getText());
 		if(!txtVida.getText().equals("")){
 			try{
 				ptsRestantes -= Integer.parseInt(txtVida.getText());
@@ -362,7 +364,7 @@ public class UI_Personaje {
 		txtEnergia.setText(String.valueOf(p.getEnergia()));
 		txtDefensa.setText(String.valueOf(p.getDefensa()));
 		txtEvasion.setText(String.valueOf(p.getEvasion()));
-		txtPtsrest.setText(String.valueOf(p.getPtsTotales()));
+		txtPtsrest.setText(String.valueOf(p.getPtsTotales()-p.getEnergia()-p.getDefensa()-p.getEvasion()-p.getVida()));
 	}
 	
 	public Personaje MapearDeFormulario(){
@@ -373,7 +375,7 @@ public class UI_Personaje {
 		p.setEnergia(Integer.parseInt(txtEnergia.getText()));
 		p.setDefensa(Integer.parseInt(txtDefensa.getText()));
 		p.setEvasion(Integer.parseInt(txtEvasion.getText()));
-		p.setPtsTotales(Integer.parseInt(txtPtsrest.getText()));
+		p.setPtsTotales(perActual.getPtsTotales());
 		return p;
 	}
 	
