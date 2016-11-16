@@ -43,6 +43,8 @@ public class UI_Partida extends JFrame {
 	private JTextField txtId2;
 	private JTextField txtPersonaje2;
 	private JLabel lblPersonaje;
+	private JRadioButton rdbtnAtacar;
+	private JRadioButton rdbtnDefender;
 	
 	private Personaje perActual1;
 	private Personaje perActual2;
@@ -159,11 +161,11 @@ public class UI_Partida extends JFrame {
 		txtDefensa2.setBounds(355, 166, 59, 20);
 		contentPane.add(txtDefensa2);
 		
-		JRadioButton rdbtnAtacar = new JRadioButton("Atacar");
+		rdbtnAtacar = new JRadioButton("Atacar");
 		rdbtnAtacar.setBounds(240, 215, 95, 23);
 		contentPane.add(rdbtnAtacar);
 		
-		JRadioButton rdbtnDefender = new JRadioButton("Defender");
+		rdbtnDefender = new JRadioButton("Defender");
 		rdbtnDefender.setBounds(240, 242, 109, 23);
 		contentPane.add(rdbtnDefender);
 		
@@ -304,29 +306,30 @@ public class UI_Partida extends JFrame {
 		}
 	}
 	
-	public void cambialblAtacante(JTextField txtAtacante){
+	public void cambialblTurno(JTextField txtAtacante){
 		lblPersonaje.setText(txtAtacante.getText());
 	}
 	
 	public void comenzarPartida(){
 		try{
-			if(txtPersonaje1.getText().length() == 0 || txtPersonaje2.getText().length() == 0){
+			if(txtId1.getText().length() == 0 || txtId2.getText().length() == 0){
 				throw new Exception("Deben estar ambos Personajes cargados.");
 			}
-			
+			cambialblTurno(sortearArranque(txtPersonaje1, txtPersonaje2));
 			
 		}catch(Exception ex){
 			notifyUser(ex.getMessage());
 		}
 	}
 	
-	public void sortearArranque(JTextField txtPersonaje1, JTextField txtPersonaje2){
+	public JTextField sortearArranque(JTextField txtPersonaje1, JTextField txtPersonaje2){
 		int a;
 		Random rnd = new Random();
 		a=rnd.nextInt(2-1+1)+1;
-		if( a == parseInt(txtPersonaje1)){
-			
+		if( a == 1){
+			return txtPersonaje1;
 		}
+		return txtPersonaje2;
 		
 	}
 	
@@ -351,6 +354,26 @@ public class UI_Partida extends JFrame {
 	
 	public void notifyUser(String mensaje) {
 		JOptionPane.showMessageDialog(this, mensaje);
+	}
+	
+	public void limpiarCampos(){
+		txtPersonaje1.setText("");
+		txtPersonaje2.setText("");
+		txtId1.setText("");
+		txtId2.setText("");
+		txtEnergia1.setText("");
+		txtEnergia2.setText("");
+		txtVida1.setText("");
+		txtVida2.setText("");
+		txtDefensa1.setText("");
+		txtDefensa2.setText("");
+		txtEvasion1.setText("");
+		txtEvasion2.setText("");
+		txtEnergia1.setText("");
+		txtEnergia2.setText("");
+		txtEnergiaAtaque.setText("");
+		lblPersonaje.setText("Personaje 1 o 2");
+		//rdbtnAtacar.
 	}
 	
 	public void cancelar(){
