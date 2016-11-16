@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 
 import entities.*;
 import logic.*;
+import java.util.Random;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -22,6 +23,8 @@ import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class UI_Partida extends JFrame {
 
@@ -39,6 +42,7 @@ public class UI_Partida extends JFrame {
 	private JTextField txtPersonaje1;
 	private JTextField txtId2;
 	private JTextField txtPersonaje2;
+	private JLabel lblPersonaje;
 	
 	private Personaje perActual1;
 	private Personaje perActual2;
@@ -64,6 +68,10 @@ public class UI_Partida extends JFrame {
 	 * Create the frame.
 	 */
 	public UI_Partida() {
+		ctrl = new PersonajeLogic();
+		perActual1 = new Personaje();
+		perActual2 = new Personaje();
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 363);
 		contentPane = new JPanel();
@@ -160,10 +168,20 @@ public class UI_Partida extends JFrame {
 		contentPane.add(rdbtnDefender);
 		
 		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				cancelar();
+			}
+		});
 		btnCancelar.setBounds(22, 299, 101, 23);
 		contentPane.add(btnCancelar);
 		
 		JButton btnComenzarPartida = new JButton("Comenzar Partida");
+		btnComenzarPartida.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				comenzarPartida();
+			}
+		});
 		btnComenzarPartida.setBounds(254, 299, 172, 23);
 		contentPane.add(btnComenzarPartida);
 		
@@ -182,7 +200,7 @@ public class UI_Partida extends JFrame {
 		contentPane.add(txtEnergiaAtaque);
 		txtEnergiaAtaque.setColumns(10);
 		
-		JLabel lblPersonaje = new JLabel("Personaje 1 o 2");
+		lblPersonaje = new JLabel("Personaje 1 o 2");
 		lblPersonaje.setBounds(71, 222, 172, 16);
 		contentPane.add(lblPersonaje);
 		
@@ -286,10 +304,61 @@ public class UI_Partida extends JFrame {
 		}
 	}
 	
+	public void cambialblAtacante(JTextField txtAtacante){
+		lblPersonaje.setText(txtAtacante.getText());
+	}
 	
+	public void comenzarPartida(){
+		try{
+			if(txtPersonaje1.getText().length() == 0 || txtPersonaje2.getText().length() == 0){
+				throw new Exception("Deben estar ambos Personajes cargados.");
+			}
+			
+			
+		}catch(Exception ex){
+			notifyUser(ex.getMessage());
+		}
+	}
+	
+	public void sortearArranque(JTextField txtPersonaje1, JTextField txtPersonaje2){
+		int a;
+		Random rnd = new Random();
+		a=rnd.nextInt(2-1+1)+1;
+		if( a == parseInt(txtPersonaje1)){
+			
+		}
+		
+	}
+	
+	public boolean validaEnergia (JTextField txtEnergia, JTextField txtEnergiaAtaque){
+		String error = "";
+		if(parseInt(txtEnergia) < parseInt(txtEnergiaAtaque)){
+			error = "Energia de ataque excede la energia del jugador.\n";
+		}
+		if (!error.isEmpty()){
+			notifyUser(error);
+			return false;
+		}
+		return true;
+		
+	}
+	
+	private int parseInt(JTextField campo){
+		String str = campo.getText();
+		int i = str.isEmpty() ? 0 : Integer.parseInt(str);
+		return i;
+	}
 	
 	public void notifyUser(String mensaje) {
 		JOptionPane.showMessageDialog(this, mensaje);
+	}
+	
+	public void cancelar(){
+		terminate();
+	}
+	
+	public void terminate(){
+		this.dispose();
 	}
 	
 }
