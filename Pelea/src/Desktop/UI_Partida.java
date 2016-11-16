@@ -178,19 +178,21 @@ public class UI_Partida extends JFrame {
 		lblPersonaje.setBounds(71, 222, 172, 16);
 		contentPane.add(lblPersonaje);
 		
-		JButton btnPersonaje1 = new JButton("Personaje 1");
+		JButton btnPersonaje1 = new JButton("Buscar Pj 1");
 		btnPersonaje1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				buscar(txtPersonaje1);
 			}
 		});
 		btnPersonaje1.setBounds(32, 12, 126, 25);
 		contentPane.add(btnPersonaje1);
 		
-		JButton btnPersonaje2 = new JButton("Personaje 2");
+		JButton btnPersonaje2 = new JButton("Buscar Pj 2");
 		btnPersonaje2.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				buscar(txtPersonaje2);
 			}
 		});
 		btnPersonaje2.setBounds(288, 12, 126, 25);
@@ -223,15 +225,29 @@ public class UI_Partida extends JFrame {
 		contentPane.add(txtPersonaje2);
 	}
 
-	public void MapearAFormulario(Personaje p){
-/*		if(p.getId()>0) txtId.setText(String.valueOf(p.getId()));
-		txtNombre.setText(p.getNombre());
-		txtVida.setText(String.valueOf(p.getVida()));
-		txtEnergia.setText(String.valueOf(p.getEnergia()));
-		txtDefensa.setText(String.valueOf(p.getDefensa()));
-		txtEvasion.setText(String.valueOf(p.getEvasion()));
-		txtPtsrest.setText(String.valueOf(p.getPtsTotales()-p.getEnergia()-p.getDefensa()-p.getEvasion()-p.getVida()));
-*/	}
+	public void MapearAFormulario(Personaje p, JTextField txtPersonaje){
+		if(txtPersonaje == txtPersonaje1){
+			if(p.getId()>0) txtId1.setText(String.valueOf(p.getId()));
+			txtPersonaje1.setText(p.getNombre());
+			txtVida1.setText(String.valueOf(p.getVida()));
+			txtEnergia1.setText(String.valueOf(p.getEnergia()));
+			txtDefensa1.setText(String.valueOf(p.getDefensa()));
+			txtEvasion1.setText(String.valueOf(p.getEvasion()));
+			
+
+		} else {
+			
+			if(p.getId()>0) txtId2.setText(String.valueOf(p.getId()));
+			txtPersonaje2.setText(p.getNombre());
+			txtVida2.setText(String.valueOf(p.getVida()));
+			txtEnergia2.setText(String.valueOf(p.getEnergia()));
+			txtDefensa2.setText(String.valueOf(p.getDefensa()));
+			txtEvasion2.setText(String.valueOf(p.getEvasion()));
+			
+		
+		}
+		
+	}
 	
 	public void buscar(JTextField txtPersonaje ){
 		
@@ -239,13 +255,24 @@ public class UI_Partida extends JFrame {
 			notifyUser("Debe ingresar un nombre por el cual buscar!");
 		} else{
 			try{
-				perActual1 = ctrl.getByNombre(txtPersonaje.getText());
-				if (perActual1.getNombre() == null){
-					notifyUser("Personaje inexistente !");
+				if(txtPersonaje == txtPersonaje1){
+					perActual1 = ctrl.getByNombre(txtPersonaje.getText());
+					if (perActual1.getNombre() == null){
+						notifyUser("Personaje inexistente !");
+					} else{
+						this.MapearAFormulario(perActual1, txtPersonaje);
+						notifyUser("Hola " + perActual1.getNombre() + " !");
+					}
 				} else{
-					this.MapearAFormulario(perActual1);
-					notifyUser("Hola " + perActual1.getNombre() + " !");
+					perActual2 = ctrl.getByNombre(txtPersonaje.getText());
+					if (perActual2.getNombre() == null){
+						notifyUser("Personaje inexistente !");
+					} else{
+						this.MapearAFormulario(perActual2, txtPersonaje);
+						notifyUser("Hola " + perActual2.getNombre() + " !");
+					}
 				}
+				
 				
 			} catch (Exception ex) {
 				notifyUser(ex.getMessage());
