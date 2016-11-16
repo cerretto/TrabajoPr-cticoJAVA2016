@@ -88,19 +88,19 @@ public class UI_Partida extends JFrame {
 		contentPane.add(lblDefensa1);
 		
 		JLabel lblVida2 = new JLabel("Vida:");
-		lblVida2.setBounds(242, 96, 46, 14);
+		lblVida2.setBounds(282, 92, 46, 14);
 		contentPane.add(lblVida2);
 		
 		JLabel lblEnergia2 = new JLabel("Energ\u00EDa:");
-		lblEnergia2.setBounds(242, 119, 66, 14);
+		lblEnergia2.setBounds(282, 115, 66, 14);
 		contentPane.add(lblEnergia2);
 		
 		JLabel lblEvasion2 = new JLabel("Evasi\u00F3n:");
-		lblEvasion2.setBounds(242, 144, 66, 14);
+		lblEvasion2.setBounds(282, 140, 66, 14);
 		contentPane.add(lblEvasion2);
 		
 		JLabel lblDefensa2 = new JLabel("Defensa:");
-		lblDefensa2.setBounds(242, 168, 66, 14);
+		lblDefensa2.setBounds(282, 164, 66, 14);
 		contentPane.add(lblDefensa2);
 		
 		txtVida1 = new JTextField();
@@ -125,38 +125,38 @@ public class UI_Partida extends JFrame {
 		
 		txtVida2 = new JTextField();
 		txtVida2.setColumns(10);
-		txtVida2.setBounds(315, 92, 59, 20);
+		txtVida2.setBounds(355, 88, 59, 20);
 		contentPane.add(txtVida2);
 		
 		txtEnergia2 = new JTextField();
 		txtEnergia2.setColumns(10);
-		txtEnergia2.setBounds(315, 117, 59, 20);
+		txtEnergia2.setBounds(355, 113, 59, 20);
 		contentPane.add(txtEnergia2);
 		
 		txtEvasion2 = new JTextField();
 		txtEvasion2.setColumns(10);
-		txtEvasion2.setBounds(315, 142, 59, 20);
+		txtEvasion2.setBounds(355, 138, 59, 20);
 		contentPane.add(txtEvasion2);
 		
 		txtDefensa2 = new JTextField();
 		txtDefensa2.setColumns(10);
-		txtDefensa2.setBounds(315, 166, 59, 20);
+		txtDefensa2.setBounds(355, 166, 59, 20);
 		contentPane.add(txtDefensa2);
 		
 		JRadioButton rdbtnAtacar = new JRadioButton("Atacar");
-		rdbtnAtacar.setBounds(125, 195, 95, 23);
+		rdbtnAtacar.setBounds(240, 215, 95, 23);
 		contentPane.add(rdbtnAtacar);
 		
 		JRadioButton rdbtnDefender = new JRadioButton("Defender");
-		rdbtnDefender.setBounds(224, 195, 109, 23);
+		rdbtnDefender.setBounds(240, 242, 109, 23);
 		contentPane.add(rdbtnDefender);
 		
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(57, 275, 101, 23);
+		btnCancelar.setBounds(22, 299, 101, 23);
 		contentPane.add(btnCancelar);
 		
 		JButton btnComenzarPartida = new JButton("Comenzar Partida");
-		btnComenzarPartida.setBounds(242, 275, 172, 23);
+		btnComenzarPartida.setBounds(254, 299, 172, 23);
 		contentPane.add(btnComenzarPartida);
 		
 		JLabel lblTurno = new JLabel("Turno:");
@@ -175,7 +175,7 @@ public class UI_Partida extends JFrame {
 		txtEnergiaAtaque.setColumns(10);
 		
 		JLabel lblPersonaje = new JLabel("Personaje 1 o 2");
-		lblPersonaje.setBounds(71, 222, 217, 14);
+		lblPersonaje.setBounds(71, 222, 172, 16);
 		contentPane.add(lblPersonaje);
 		
 		JButton btnPersonaje1 = new JButton("Personaje 1");
@@ -204,6 +204,7 @@ public class UI_Partida extends JFrame {
 		txtId1.setColumns(10);
 		
 		txtPersonaje1 = new JTextField();
+		txtPersonaje1.setEnabled(false);
 		txtPersonaje1.setBounds(68, 49, 114, 31);
 		contentPane.add(txtPersonaje1);
 		txtPersonaje1.setColumns(10);
@@ -216,6 +217,7 @@ public class UI_Partida extends JFrame {
 		contentPane.add(txtId2);
 		
 		txtPersonaje2 = new JTextField();
+		txtPersonaje2.setEnabled(false);
 		txtPersonaje2.setColumns(10);
 		txtPersonaje2.setBounds(300, 49, 114, 31);
 		contentPane.add(txtPersonaje2);
