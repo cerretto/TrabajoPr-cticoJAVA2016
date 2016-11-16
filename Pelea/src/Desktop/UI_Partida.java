@@ -104,41 +104,49 @@ public class UI_Partida extends JFrame {
 		contentPane.add(lblDefensa2);
 		
 		txtVida1 = new JTextField();
+		txtVida1.setEditable(false);
 		txtVida1.setBounds(99, 92, 59, 20);
 		contentPane.add(txtVida1);
 		txtVida1.setColumns(10);
 		
 		txtEnergia1 = new JTextField();
+		txtEnergia1.setEditable(false);
 		txtEnergia1.setColumns(10);
 		txtEnergia1.setBounds(99, 117, 59, 20);
 		contentPane.add(txtEnergia1);
 		
 		txtEvasion1 = new JTextField();
+		txtEvasion1.setEditable(false);
 		txtEvasion1.setColumns(10);
 		txtEvasion1.setBounds(99, 142, 59, 20);
 		contentPane.add(txtEvasion1);
 		
 		txtDefensa1 = new JTextField();
+		txtDefensa1.setEditable(false);
 		txtDefensa1.setColumns(10);
 		txtDefensa1.setBounds(99, 166, 59, 20);
 		contentPane.add(txtDefensa1);
 		
 		txtVida2 = new JTextField();
+		txtVida2.setEditable(false);
 		txtVida2.setColumns(10);
 		txtVida2.setBounds(355, 88, 59, 20);
 		contentPane.add(txtVida2);
 		
 		txtEnergia2 = new JTextField();
+		txtEnergia2.setEditable(false);
 		txtEnergia2.setColumns(10);
 		txtEnergia2.setBounds(355, 113, 59, 20);
 		contentPane.add(txtEnergia2);
 		
 		txtEvasion2 = new JTextField();
+		txtEvasion2.setEditable(false);
 		txtEvasion2.setColumns(10);
 		txtEvasion2.setBounds(355, 138, 59, 20);
 		contentPane.add(txtEvasion2);
 		
 		txtDefensa2 = new JTextField();
+		txtDefensa2.setEditable(false);
 		txtDefensa2.setColumns(10);
 		txtDefensa2.setBounds(355, 166, 59, 20);
 		contentPane.add(txtDefensa2);
@@ -206,7 +214,6 @@ public class UI_Partida extends JFrame {
 		txtId1.setColumns(10);
 		
 		txtPersonaje1 = new JTextField();
-		txtPersonaje1.setEnabled(false);
 		txtPersonaje1.setBounds(68, 49, 114, 31);
 		contentPane.add(txtPersonaje1);
 		txtPersonaje1.setColumns(10);
@@ -219,7 +226,6 @@ public class UI_Partida extends JFrame {
 		contentPane.add(txtId2);
 		
 		txtPersonaje2 = new JTextField();
-		txtPersonaje2.setEnabled(false);
 		txtPersonaje2.setColumns(10);
 		txtPersonaje2.setBounds(300, 49, 114, 31);
 		contentPane.add(txtPersonaje2);
