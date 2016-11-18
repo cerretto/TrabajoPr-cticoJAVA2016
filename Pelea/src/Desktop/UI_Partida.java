@@ -45,11 +45,14 @@ public class UI_Partida extends JFrame {
 	private JLabel lblPersonaje;
 	private JRadioButton rdbtnAtacar;
 	private JRadioButton rdbtnDefender;
+	private JButton btnComenzarPartida;
+	private JButton btnPersonaje1;
+	private JButton btnPersonaje2;
 	
 	private Personaje perActual1;
 	private Personaje perActual2;
 	
-	private PersonajeLogic ctrl;
+	private PartidaLogic ctrl;
 	/**
 	 * Launch the application.
 	 */
@@ -70,7 +73,8 @@ public class UI_Partida extends JFrame {
 	 * Create the frame.
 	 */
 	public UI_Partida() {
-		ctrl = new PersonajeLogic();
+		
+		ctrl = new PartidaLogic();
 		perActual1 = new Personaje();
 		perActual2 = new Personaje();
 		
@@ -162,10 +166,20 @@ public class UI_Partida extends JFrame {
 		contentPane.add(txtDefensa2);
 		
 		rdbtnAtacar = new JRadioButton("Atacar");
+		rdbtnAtacar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				atacar();
+			}
+		});
 		rdbtnAtacar.setBounds(240, 215, 95, 23);
 		contentPane.add(rdbtnAtacar);
 		
 		rdbtnDefender = new JRadioButton("Defender");
+		rdbtnDefender.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//defender();
+			}
+		});
 		rdbtnDefender.setBounds(240, 242, 109, 23);
 		contentPane.add(rdbtnDefender);
 		
@@ -178,7 +192,7 @@ public class UI_Partida extends JFrame {
 		btnCancelar.setBounds(22, 299, 101, 23);
 		contentPane.add(btnCancelar);
 		
-		JButton btnComenzarPartida = new JButton("Comenzar Partida");
+		btnComenzarPartida = new JButton("Comenzar Partida");
 		btnComenzarPartida.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				comenzarPartida();
@@ -206,7 +220,7 @@ public class UI_Partida extends JFrame {
 		lblPersonaje.setBounds(71, 222, 172, 16);
 		contentPane.add(lblPersonaje);
 		
-		JButton btnPersonaje1 = new JButton("Buscar Pj 1");
+		btnPersonaje1 = new JButton("Buscar Pj 1");
 		btnPersonaje1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -216,7 +230,7 @@ public class UI_Partida extends JFrame {
 		btnPersonaje1.setBounds(32, 12, 126, 25);
 		contentPane.add(btnPersonaje1);
 		
-		JButton btnPersonaje2 = new JButton("Buscar Pj 2");
+		btnPersonaje2 = new JButton("Buscar Pj 2");
 		btnPersonaje2.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -249,6 +263,10 @@ public class UI_Partida extends JFrame {
 		txtPersonaje2.setColumns(10);
 		txtPersonaje2.setBounds(300, 49, 114, 31);
 		contentPane.add(txtPersonaje2);
+		
+		///rbtnDESACTIVADOS
+		rdbtnAtacar.setEnabled(false);
+		rdbtnDefender.setEnabled(false);
 	}
 
 	public void MapearAFormulario(Personaje p, JTextField txtPersonaje){
@@ -282,20 +300,22 @@ public class UI_Partida extends JFrame {
 		} else{
 			try{
 				if(txtPersonaje == txtPersonaje1){
-					perActual1 = ctrl.getByNombre(txtPersonaje.getText());
+					perActual1 = new PersonajeLogic().getByNombre(txtPersonaje.getText());
 					if (perActual1.getNombre() == null){
 						notifyUser("Personaje inexistente !");
 					} else{
 						this.MapearAFormulario(perActual1, txtPersonaje);
 						notifyUser("Hola " + perActual1.getNombre() + " !");
+						this.txtPersonaje1.setEnabled(false);
 					}
 				} else{
-					perActual2 = ctrl.getByNombre(txtPersonaje.getText());
+					perActual2 = new PersonajeLogic().getByNombre(txtPersonaje.getText());
 					if (perActual2.getNombre() == null){
 						notifyUser("Personaje inexistente !");
 					} else{
 						this.MapearAFormulario(perActual2, txtPersonaje);
 						notifyUser("Hola " + perActual2.getNombre() + " !");
+						this.txtPersonaje2.setEnabled(false);
 					}
 				}
 				
@@ -311,38 +331,50 @@ public class UI_Partida extends JFrame {
 	}
 	
 	public void comenzarPartida(){
-		try{
-			if(txtId1.getText().length() == 0 || txtId2.getText().length() == 0){
-				throw new Exception("Deben estar ambos Personajes cargados.");
-			}
-			cambialblTurno(sortearArranque(txtPersonaje1, txtPersonaje2));
+		ctrl.setPartidaEnCurso(true);
+		
+		try {
 			
-		}catch(Exception ex){
+			ctrl.comenzarPartida(perActual1, perActual2);
+			this.btnComenzarPartida.setEnabled(false);
+			this.btnPersonaje1.setEnabled(false);
+			this.btnPersonaje2.setEnabled(false);
+			
+			String turnoDe = ctrl.getEnTurno().getP().getNombre();
+			this.lblPersonaje.setText(turnoDe);
+			rdbtnAtacar.setEnabled(true);
+			rdbtnDefender.setEnabled(true);
+			
+			
+		}
+		catch (Exception ex) {
 			notifyUser(ex.getMessage());
 		}
 	}
 	
-	public JTextField sortearArranque(JTextField txtPersonaje1, JTextField txtPersonaje2){
-		int a;
-		Random rnd = new Random();
-		a=rnd.nextInt(2-1+1)+1;
-		if( a == 1){
-			return txtPersonaje1;
+	public void atacar(){
+		try{
+			ctrl.atacar(parseInt(this.txtEnergiaAtaque));
+		} catch (Exception ex){
+			notifyUser(ex.getMessage());
 		}
-		return txtPersonaje2;
 		
+		actualizarPantalla();
 	}
-	
-	public boolean validaEnergia (JTextField txtEnergia, JTextField txtEnergiaAtaque){
-		String error = "";
-		if(parseInt(txtEnergia) < parseInt(txtEnergiaAtaque)){
-			error = "Energia de ataque excede la energia del jugador.\n";
-		}
-		if (!error.isEmpty()){
-			notifyUser(error);
-			return false;
-		}
-		return true;
+	public void actualizarPantalla(){
+		this.txtEnergia1.setText(String.valueOf( ctrl.getJugador1().getEnergiaActual() ));
+		this.txtVida1.setText(String.valueOf( ctrl.getJugador1().getVidaActual() ));
+		
+		this.txtEnergia2.setText(String.valueOf( ctrl.getJugador2().getEnergiaActual() ));
+		this.txtVida2.setText(String.valueOf( ctrl.getJugador2().getVidaActual() ));
+		
+		String turnoDe = ctrl.getEnTurno().getP().getNombre();
+		this.lblPersonaje.setText(turnoDe);
+		
+		rdbtnAtacar.setSelected(false);
+		rdbtnDefender.setSelected(false);
+		
+		this.txtEnergiaAtaque.setText("");
 		
 	}
 	
@@ -358,7 +390,9 @@ public class UI_Partida extends JFrame {
 	
 	public void limpiarCampos(){
 		txtPersonaje1.setText("");
+		txtPersonaje1.setEnabled(true);
 		txtPersonaje2.setText("");
+		txtPersonaje2.setEnabled(true);
 		txtId1.setText("");
 		txtId2.setText("");
 		txtEnergia1.setText("");
@@ -373,10 +407,12 @@ public class UI_Partida extends JFrame {
 		txtEnergia2.setText("");
 		txtEnergiaAtaque.setText("");
 		lblPersonaje.setText("Personaje 1 o 2");
+		
 		//rdbtnAtacar.
 	}
 	
 	public void cancelar(){
+		limpiarCampos();
 		terminate();
 	}
 	

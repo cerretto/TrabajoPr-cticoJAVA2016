@@ -55,6 +55,8 @@ public class PartidaLogic {
 	public void comenzarPartida(Personaje p1, Personaje p2) throws Exception {
 		if(p1 == null || p2 == null)
 			throw new Exception("Elija ambos personajes!");
+		if(p1.getId() <1 || p2.getId() < 1 )
+			throw new Exception("Elija ambos personajes!");
 		if(p1.getNombre().equals(p2.getNombre()))
 			throw new Exception ("Elija personajes diferentes!");
 		
