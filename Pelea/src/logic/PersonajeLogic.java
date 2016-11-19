@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 //import util.*;
 import entities.*;
+import entities.Entidad.estadoData;
 import data.*;
 
 public class PersonajeLogic {
+	int puntosGanados = 10;
 	
 	private PersonajeAdapter PersonajeData;
 	
@@ -79,6 +81,12 @@ public class PersonajeLogic {
 	
 	public Personaje getByNombre(String nombre) throws Exception {
 		return PersonajeData.getByNombre(null, nombre);
+	}
+	
+	public void asignarPuntos(Personaje ganador) throws Exception{
+		ganador.setPtsTotales( ganador.getPtsTotales() + this.puntosGanados );
+		ganador.setEstData(estadoData.Modified); 
+		guardar(ganador);
 	}
 	
 }

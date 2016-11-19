@@ -177,7 +177,7 @@ public class UI_Partida extends JFrame {
 		rdbtnDefender = new JRadioButton("Defender");
 		rdbtnDefender.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//defender();
+				defender();
 			}
 		});
 		rdbtnDefender.setBounds(240, 242, 109, 23);
@@ -264,9 +264,7 @@ public class UI_Partida extends JFrame {
 		txtPersonaje2.setBounds(300, 49, 114, 31);
 		contentPane.add(txtPersonaje2);
 		
-		///rbtnDESACTIVADOS
-		rdbtnAtacar.setEnabled(false);
-		rdbtnDefender.setEnabled(false);
+		this.limpiarCampos();
 	}
 
 	public void MapearAFormulario(Personaje p, JTextField txtPersonaje){
@@ -306,7 +304,8 @@ public class UI_Partida extends JFrame {
 					} else{
 						this.MapearAFormulario(perActual1, txtPersonaje);
 						notifyUser("Hola " + perActual1.getNombre() + " !");
-						this.txtPersonaje1.setEnabled(false);
+						//this.txtPersonaje1.setEnabled(false);
+						this.txtPersonaje1.setEditable(false);
 					}
 				} else{
 					perActual2 = new PersonajeLogic().getByNombre(txtPersonaje.getText());
@@ -315,7 +314,8 @@ public class UI_Partida extends JFrame {
 					} else{
 						this.MapearAFormulario(perActual2, txtPersonaje);
 						notifyUser("Hola " + perActual2.getNombre() + " !");
-						this.txtPersonaje2.setEnabled(false);
+						//this.txtPersonaje2.setEnabled(false);
+						this.txtPersonaje2.setEditable(false);
 					}
 				}
 				
@@ -325,29 +325,47 @@ public class UI_Partida extends JFrame {
 			}
 		}
 	}
-	
-	public void cambialblTurno(JTextField txtAtacante){
-		lblPersonaje.setText(txtAtacante.getText());
-	}
-	
+			
 	public void comenzarPartida(){
-		ctrl.setPartidaEnCurso(true);
+		
 		
 		try {
+			if (ctrl == null) this.ctrl = new PartidaLogic();
+			
+			ctrl.setPartidaEnCurso(true);
 			
 			ctrl.comenzarPartida(perActual1, perActual2);
+			
 			this.btnComenzarPartida.setEnabled(false);
 			this.btnPersonaje1.setEnabled(false);
 			this.btnPersonaje2.setEnabled(false);
+			this.txtEnergiaAtaque.setEditable(true);
 			
-			String turnoDe = ctrl.getEnTurno().getP().getNombre();
-			this.lblPersonaje.setText(turnoDe);
-			rdbtnAtacar.setEnabled(true);
-			rdbtnDefender.setEnabled(true);
+			cambiarLblTurno();
+			
+			this.rdbtnAtacar.setEnabled(true);
+			this.rdbtnDefender.setEnabled(true);
 			
 			
 		}
 		catch (Exception ex) {
+			notifyUser(ex.getMessage());
+		}
+	}
+	
+	public void terminarPartida(){
+		notifyUser("Ha ganado el jugador: " + ctrl.getEnTurno().getP().getNombre());
+		asignarPuntos(ctrl.getEnTurno().getP());
+		
+		ctrl = null;
+		limpiarCampos();
+		
+	}
+	
+	public void asignarPuntos(Personaje ganador){
+		try{
+			new PersonajeLogic().asignarPuntos(ganador);
+		} catch(Exception ex){
 			notifyUser(ex.getMessage());
 		}
 	}
@@ -360,7 +378,24 @@ public class UI_Partida extends JFrame {
 		}
 		
 		actualizarPantalla();
+		if(!ctrl.isPartidaEnCurso()){
+			terminarPartida();
+		}
 	}
+	
+	public void defender(){
+		try{
+			ctrl.defender();
+		}catch(Exception ex){
+			notifyUser(ex.getMessage());
+		}
+		
+		actualizarPantalla();
+		if(!ctrl.isPartidaEnCurso()){
+			terminarPartida();
+		}
+	}
+	
 	public void actualizarPantalla(){
 		this.txtEnergia1.setText(String.valueOf( ctrl.getJugador1().getEnergiaActual() ));
 		this.txtVida1.setText(String.valueOf( ctrl.getJugador1().getVidaActual() ));
@@ -368,14 +403,18 @@ public class UI_Partida extends JFrame {
 		this.txtEnergia2.setText(String.valueOf( ctrl.getJugador2().getEnergiaActual() ));
 		this.txtVida2.setText(String.valueOf( ctrl.getJugador2().getVidaActual() ));
 		
-		String turnoDe = ctrl.getEnTurno().getP().getNombre();
-		this.lblPersonaje.setText(turnoDe);
-		
+		cambiarLblTurno();
+				
 		rdbtnAtacar.setSelected(false);
 		rdbtnDefender.setSelected(false);
 		
 		this.txtEnergiaAtaque.setText("");
 		
+	}
+	
+	private void cambiarLblTurno(){
+		String turnoDe = ctrl.getEnTurno().getP().getNombre();
+		this.lblPersonaje.setText(turnoDe);
 	}
 	
 	private int parseInt(JTextField campo){
@@ -384,15 +423,21 @@ public class UI_Partida extends JFrame {
 		return i;
 	}
 	
-	public void notifyUser(String mensaje) {
+	private void notifyUser(String mensaje) {
 		JOptionPane.showMessageDialog(this, mensaje);
 	}
 	
-	public void limpiarCampos(){
+	private void limpiarCampos(){
+		this.perActual1 = null;
+		this.perActual2 = null;
+		this.ctrl = null;
 		txtPersonaje1.setText("");
-		txtPersonaje1.setEnabled(true);
+		txtPersonaje1.setEditable(true);
 		txtPersonaje2.setText("");
-		txtPersonaje2.setEnabled(true);
+		txtPersonaje2.setEditable(true);
+		this.btnComenzarPartida.setEnabled(true);
+		this.btnPersonaje1.setEnabled(true);
+		this.btnPersonaje2.setEnabled(true);
 		txtId1.setText("");
 		txtId2.setText("");
 		txtEnergia1.setText("");
@@ -406,9 +451,10 @@ public class UI_Partida extends JFrame {
 		txtEnergia1.setText("");
 		txtEnergia2.setText("");
 		txtEnergiaAtaque.setText("");
+		txtEnergiaAtaque.setEditable(false);
 		lblPersonaje.setText("Personaje 1 o 2");
-		
-		//rdbtnAtacar.
+		this.rdbtnAtacar.setEnabled(false);
+		this.rdbtnDefender.setEnabled(false);
 	}
 	
 	public void cancelar(){
